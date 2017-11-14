@@ -1291,7 +1291,7 @@ function editLayout(button, layoutName, layoutID, title, loadData, paramReferenc
                 if (navigation) {
                     toogleColapseContainer($tabNav, false)
                     //$("#" + tabGenID).prop("hidden", "hidden");
-                    //$("#" + tabGenID).hide();
+                    //$("#" + tabGenID).hide() ;
                     $(button).removeClass("disabled");
 
                     var idbutton = $("." + tabGenID + "_edit");
