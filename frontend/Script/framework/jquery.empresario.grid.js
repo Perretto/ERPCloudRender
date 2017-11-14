@@ -1291,7 +1291,7 @@ function editLayout(button, layoutName, layoutID, title, loadData, paramReferenc
                 if (navigation) {
                     toogleColapseContainer($tabNav, false)
                     //$("#" + tabGenID).prop("hidden", "hidden");
-                    $("#" + tabGenID).hide();
+                    //$("#" + tabGenID).hide();
                     $(button).removeClass("disabled");
 
                     var idbutton = $("." + tabGenID + "_edit");
@@ -1483,7 +1483,7 @@ function editLayout(button, layoutName, layoutID, title, loadData, paramReferenc
                 }
             });
 
-            $("#" + layoutID + "_" + tabGenID + ">.panel .wizard-buttons").html("");
+            $("#" + tabGenID + ">.panel .wizard-buttons").html("");
 
             //var wizard = $("#" + layoutID + "_" + tabGenID + ">.panel").wizard(options).data('wizard');
             var wizard = $("#" + tabGenID + ">.panel").wizard(options).data('wizard');
