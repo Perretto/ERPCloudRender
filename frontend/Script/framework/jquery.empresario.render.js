@@ -51,7 +51,7 @@
 
 
 
-function CreateAba(nameLayout, layoutID, titleMenu, dados, navigation, containerType, forcingTemplate, layoutType, callInstance) {
+function CreateAba(nameLayout, layoutID, titleMenu, dados, navigation, containerType, forcingTemplate, layoutType, callInstance, tabGenID) {
     //html dos controles
     var nomeTemplate = "";
     var title;
@@ -66,7 +66,9 @@ function CreateAba(nameLayout, layoutID, titleMenu, dados, navigation, container
     var EnterpriseName = returnCookie("EnterpriseName");
 
     //var random = Math.random().toString().replace(".", "");
-    var tabGenID = gerarGUID();
+    
+    //Agora é passado por parametro.
+    //var tabGenID = gerarGUID();
 
     layoutID = layoutID;
 
@@ -83,8 +85,8 @@ function CreateAba(nameLayout, layoutID, titleMenu, dados, navigation, container
     dados = dados + "&userID=" + userid;
     dados = dados + "&lang=" + lang;
 
-    if (navigation == false) {
-        dados = dados + "&navigation=" + navigation;
+    if (navigation == false || navigation == "") {
+        dados = dados + "&navigation=false";
     }
 
     switch (containerType) {

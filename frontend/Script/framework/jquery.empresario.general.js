@@ -372,8 +372,8 @@ function getGlobalParameters(parametro) {
     var global = new Object();
 
     //Servidor homologação
-    global.urlPlataforma = "http://54.149.163.193:80"
-    global.urlInterface = "http://54.149.163.193:80"
+    //global.urlPlataforma = "http://54.149.163.193:80"
+    //global.urlInterface = "http://54.149.163.193:80"
 
     //global.urlPlataforma = "http://54.149.163.193:81"
     //global.urlInterface = "http://54.149.163.193:81"
@@ -386,11 +386,14 @@ function getGlobalParameters(parametro) {
     //global.urlPlataforma = "http://localhost:27707"
 
     //Servidor produção
-    //global.urlInterface = "http://52.89.57.100/"
-    //global.urlPlataforma = "http://52.89.57.100/"
+    //global.urlInterface = "http://52.89.57.100"
+    //global.urlPlataforma = "http://52.89.57.100"
 
     //global.urlInterface = "http://" + window.location.host
     //global.urlPlataforma = "http://" + window.location.host
+
+    global.urlInterface = "http://homologa.empresariocloud.com.br";
+    global.urlPlataforma = "http://homologa.empresariocloud.com.br";
 
     global.urlDesenvolvimento = "http://localhost:13886/";
 
