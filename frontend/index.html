@@ -526,38 +526,62 @@
             var Site = window.Site;
             $(document).ready(function () {
             Site.run()
-                createCookie("EnterpriseID", "f1495bcf-9258-4245-8edf-d0fac225412d", 5);
-                createCookie("UserID", "de5d2469-ae66-4696-9147-004f86f7d0d9", 5);
+                createCookie("EnterpriseID", "561BF579-5655-42DE-A290-038C6F76B974", 5);
+                createCookie("UserID", "DE5D2469-AE66-4696-9147-004F86F7D0D9", 5);
                 createCookie("urlPlataform", "http://homologa.empresariocloud.com.br", 5);
 				createCookie('Lang', 'PT_BR', 5)
 				
-                var enterpriseID = getUrlVar("enterpriseID") //'F1495BCF-9258-4245-8EDF-D0FAC225412D'
+                var enterpriseID = getUrlVar("enterpriseID")
 				var systemName = getUrlVar("systemName") //'cadastrodeclientes'
-				var layoutID = getUrlVar("layoutID") //'d82d11c8-ea16-47c7-be04-10423467f04e'
-				var publish = getUrlVar("publish") //false/true
+				var layoutID = getUrlVar("layoutID")
+				var publish = getUrlVar("publish") //false
 				var titleMenu = 'Clientes'
                 var dados = "&enterpriseID=" + enterpriseID;
                 
+                //abre tela
                 var tabGenID = gerarGUID();
-				CreateAba(systemName, layoutID, titleMenu, dados, "", "", "", "", "", tabGenID);
-                
-                //$.post("databaseservice.js", {p1: valor}, function(retorno){
+				CreateAba(systemName, layoutID, titleMenu, dados, "", "", "", "", "", tabGenID, function(){
+                    //pega a tag form no html
+                    var _html = $("#" + tabGenID).html();
                     
-                //});
+                    //pega o select all
+                    var _listall = "";
+                    var urllistall="http://localhost:3001/api/getSelectListAll/" + enterpriseID + "/" + layoutID;
+                    $.ajax({
+                        method: "GET",
+                        async: false,
+                        url: urllistall
+                    })
+                    .done(function( result ) {
+                        _listall = result;
+                    });
 
-                /*
-                var objParam = ""; 
-                var parameters = new Object();
-                parameters.type = "POST";
-                parameters.url = getGlobalParameters("urlPlataforma") + "/saveHtml";
-                parameters.dados = JSON.stringify(objParam);
-                parameters.async = false;
-                parameters.callbackSuccess = function (result) {
 
-                }
-                AjaxQuery(parameters);
-                */
+                    //pega o select da tela
+                    var _finddata = "";
+                    var urldata="http://localhost:3001/api/getSelecFinddata/" + enterpriseID + "/" + layoutID;
+                    $.ajax({
+                        method: "GET",
+                        async: false,
+                        url: urldata
+                    })
+                    .done(function( result ) {
+                        _finddata = result;
+                    });
+                    
 
+                    //salva
+                    $.ajax({
+                        method: "POST",
+                        url: "http://localhost:3001/api/saveHtml",
+                        data: { layoutID: layoutID, html: _html, tabgenid: tabGenID, listall: _listall, finddata: _finddata }
+                    })
+                    .done(function( msg ) {
+                        alert( "Data Saved: " + msg );
+                    });
+    
+                });
+                    
 
 				$(window).keydown(function (event) {
 					if (event.keyCode == 13) {

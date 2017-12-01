@@ -25,7 +25,7 @@
     } else {
         retorno = retorno + "                <h4 class='modal-title' id='H2'>" + form.systemName + "<br /></h4>";
     }
-
+    
 
     retorno = retorno + "            </div>";
     retorno = retorno + "            <div class='modal-body'>";
@@ -71,7 +71,7 @@
                             } else {
                                 title = form.container[i].Form[0].container[k].control[y].systemName;
                             }
-
+                            
                             controlType = form.container[i].Form[0].container[k].control[y].controlType;
                             controlID = form.container[i].Form[0].container[k].control[y].ID;
                             propertyID = form.container[i].Form[0].container[k].control[y].propertyID;
@@ -88,7 +88,7 @@
             } else {
                 formSearch = formSearch + "            <optgroup label='" + form.container[i].systemName + "'>";
             }
-
+            
             for (var j = 0; j < form.container[i].control.length; j++) {
                 controlID = form.container[i].control[j].ID;
                 propertyID = form.container[i].control[j].propertyID;
@@ -103,7 +103,7 @@
                     }
                 } else {
                     title = form.container[i].control[j].systemName;
-                }
+                }                
 
                 controlType = form.container[i].control[j].controlType;
                 layoutID = form.layoutID;
@@ -122,7 +122,7 @@
             } else {
                 formSearch = formSearch + "            <optgroup label='" + form.systemName + "'>";
             }
-
+            
             for (var y = 0; y < form.control.length; y++) {
                 table = form.control[y].table;
                 field = form.control[y].field;
@@ -142,7 +142,7 @@
                 formSearch = formSearch + "                <option data-table='" + table + "' onclick=\"OpenTypeData('" + id + "','" + controlType + "','" + title + "','" + controlID + "', '" + propertyID + "','" + table + "','" + field + "','" + layoutID + "', '" + tabGenID + "')\"  value='a'>" + title + "</option>";
             }
             formSearch = formSearch + "            </optgroup>";
-
+                 
             if (form.title) {
                 if (form.title.length > 0) {
                     formSearch = formSearch + "            <optgroup label='" + form.title[0].text + "'>";
@@ -152,7 +152,7 @@
             } else {
                 formSearch = formSearch + "            <optgroup label='" + form.systemName + "'>";
             }
-
+            
 
             for (var j = 0; j < form.control.length; j++) {
                 controlID = form.control[j].ID;
@@ -191,8 +191,8 @@
 
 function OpenFormSearch(tabGenID) {
     //$("#" + id + "_alertaModalFormSearchShow").modal('show');
-    var target = $("#" + tabGenID).parents().find(".panel-nav");
-    $(target).show()
+    var target = $("#"+tabGenID).parents().find(".panel-nav");
+	$(target).show()
     $('html, body').animate({ scrollTop: target.offset().top }, 1000);
     toogleColapseContainer(target, false)
     return false;
@@ -235,7 +235,7 @@ function OpenTypeData(id, controlType, titulo, controlID, propertyID, table, fie
             type = "TEXT";
             break;
         case "RADIO":
-            break;
+           break;      
         case "EMAIL":
             formSearch = "<label>" + titulo + "</label><input id='" + id + "'  type='text' />";
             type = "TEXT";
@@ -247,7 +247,7 @@ function OpenTypeData(id, controlType, titulo, controlID, propertyID, table, fie
         case "DROPDOWNDSG":
             formSearch = "<label>" + titulo + "</label><input id='" + id + "'  type='text' />";
             type = "TEXT";
-            break;
+             break;
         case "TREEVIEWTEXT":
             formSearch = "<label>" + titulo + "</label><input id='" + id + "'  type='text' />";
             type = "TEXT";
@@ -255,7 +255,7 @@ function OpenTypeData(id, controlType, titulo, controlID, propertyID, table, fie
         case "DATETIME":
             formSearch = "<label>" + titulo + "</label><input  id='" + id + "' type='datetime' />";
             type = "DATE";
-            break;
+           break;
         case "AUTOCOMPLETE":
             formSearch = "<label>" + titulo + "</label><input id='" + id + "'  type='text' />";
             type = "TEXT";
@@ -279,7 +279,7 @@ function OpenTypeData(id, controlType, titulo, controlID, propertyID, table, fie
         case "TEXTPERC":
             formSearch = "<label>" + titulo + "</label><input  id='" + id + "' type='text' />";
             type = "TEXT";
-            break;
+           break;
         case "IMAGE":
             break;
         case "FILE":
@@ -293,7 +293,7 @@ function OpenTypeData(id, controlType, titulo, controlID, propertyID, table, fie
 }
 
 function ClickAdd(id, type, titulo, controlID, propertyID, table, field, layoutID, tabGenID) {
-
+    
     var formSearch = "";
     var idlineint;
     var idline;
@@ -331,7 +331,7 @@ function ClickAdd(id, type, titulo, controlID, propertyID, table, field, layoutI
 
     var HTMLButtonSearch;
     HTMLButtonSearch = "<br><input onclick=\"ClickSearch('" + id + "', '" + tabGenID + "')\" type='button' value='Buscar' />";
-
+  
     document.getElementById(id + "_ContainerButtonSearch").innerHTML = HTMLButtonSearch;
 }
 
@@ -354,7 +354,7 @@ function ClickSearch(id, tabGenID) {
     for (var i = 0, row; row = table.rows[i]; i++) {
         for (var j = 0, col; col = row.cells[j]; j++) {
             if (col.getAttribute("data-serializable") == "true") {
-                aValue[k] = col.innerText;
+                aValue[k] = col.innerText;                
                 propertyID[k] = col.getAttribute("data-propertyID");
                 controlID[k] = col.getAttribute("data-controlID");
                 table[k] = col.getAttribute("data-table");
@@ -369,17 +369,17 @@ function ClickSearch(id, tabGenID) {
     var select = document.getElementById("select-repeated-options");
     var options = select.querySelectorAll('option');
     var tables = [];
-    var str = "";
+    var str="";
     var index = -1;
 
     for (var i = 0; i < options.length; i++) {
         if (str.indexOf(options[i].getAttribute("data-table")) == -1) {
             index = index + 1;
             tables[index] = options[i].getAttribute("data-table");
-            str = str + " - " + options[i].getAttribute("data-table");
+            str = str  + " - " + options[i].getAttribute("data-table");
         }
     }
-
+    
     tables = tables.sort();
     AjaxSearch(controlID, propertyID, aValue, table, field, layoutID, tables, id, tabGenID);
 }
@@ -399,7 +399,7 @@ function AjaxSearch(controlID, propertyID, value, table, field, layoutID, tables
         },
         error: function (response) {
             alert(response);
-        }
+    }
     });
 }
 
@@ -407,12 +407,12 @@ function CreateGridFormSearch(response, id, layoutID, tabGenID) {
     var columCount = 0;
     var HTMLGridSearch = "";
     var filtro = [];
-    var fill1PropertyID = "";
+    var fill1PropertyID="";
 
     for (var i = 0; i < response.container.length; i++) {
         if (response.container[i].control != null) {
             for (var j = 0; j < response.container[i].control.length; j++) {
-                if (response.container[i].control[j].Property) {
+                if (response.container[i].control[j].Property){
                     if (response.container[i].control[j].Property.primaryKey == true) {
                         if (fill1PropertyID == "") {
                             fill1PropertyID = response.container[i].control[j].Property.ID;
@@ -547,7 +547,7 @@ function FillFormSearch(filtro, layoutID, fill1PropertyID, id, tabGenID) {
         dataType: 'json',
         success: function (data) {
             FillForm(data, "", tabGenID);
-        }
+        }                
     });
 
     $("#" + id + "_alertaModalFormSearchShow").modal('hide');

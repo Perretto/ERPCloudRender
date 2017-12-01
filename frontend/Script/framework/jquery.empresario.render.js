@@ -51,7 +51,7 @@
 
 
 
-function CreateAba(nameLayout, layoutID, titleMenu, dados, navigation, containerType, forcingTemplate, layoutType, callInstance, tabGenID) {
+function CreateAba(nameLayout, layoutID, titleMenu, dados, navigation, containerType, forcingTemplate, layoutType, callInstance, tabGenID, callbackSucess) {
     //html dos controles
     var nomeTemplate = "";
     var title;
@@ -128,9 +128,14 @@ function CreateAba(nameLayout, layoutID, titleMenu, dados, navigation, container
                 getAjaxParameter(urlRenderLayout, urlRenderLayoutData, function () {
                     //getAjaxParameter(getGlobalParameters("urlInterface") + "/renderform", nameLayout + Dados, function () {
                     fillTab(resultadoParametroExterno, formID, layoutID, tabGenID, forcingTemplate, layoutType, urlRenderLayout, urlRenderLayoutData, titleMenu)
+                
+                    if (callbackSucess) {
+                        callbackSucess();
+                    }
                 }, function () {
                     replaceTabControls(formID, layoutID, tabGenID, forcingTemplate, layoutType, urlRenderLayout, urlRenderLayoutData)
                 })
+
     //        }
     //        else {
                 //fillTab(null, formID, layoutID, tabGenID, forcingTemplate, layoutType, urlRenderLayout, urlRenderLayoutData, titleMenu)
@@ -325,7 +330,7 @@ function getDropdownHTML(layoutID, tabGenID) {
         $.ajax({
             url: getGlobalParameters("urlPlataforma") + "/api/publish/getDropdownHTML" + parameters,
             type: "GET",
-            async: false,
+            async: true,
             success: function (data) {
 
                 for (var key in data) {

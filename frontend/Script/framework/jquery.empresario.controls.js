@@ -99,6 +99,9 @@
         if (containerPrincipalDataTypeID == principalDataTypeID) {
             isPrincipal = true;
             isPrincipalClass = "principalContainer"
+            if (containerSelected.column == 12) {
+                containerSelected.column = 13;
+            }
         } else {
             isPrincipal = false;
             isPrincipalClass = ""

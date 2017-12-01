@@ -32,42 +32,42 @@ function createSteps(containersCount, titulosContainers, parameters) {
     }
 
     var forms = $("#" + recipient + " > .panel > .panel-body > form")
-    containersCount = forms.length
+containersCount = forms.length
     if (containersCount > 0) {
         var div = $(div);
 
         //cria os steps do wizard
         htmlControlsTabs += "<div class=\"steps steps-xs row \" data-plugin=\"matchHeight\" data-by-row=\"true\" role=\"tablist\">";
         //cria o conteudo das steps
-        var iform = -1;
-
+		var iform = -1;
+		
         //cria cada step
         for (var i = 0; i < parameters.metadados.container.length; i++) {
+			
+			if(parameters.metadados.container[i].systemName != "CoCadastroCliente" && parameters.metadados.container[i].systemName != "CoCadastroForncedor" && parameters.metadados.container[i].systemName != "CoEntidadePrestador" && parameters.metadados.container[i].systemName != "CoCadastroVendedor"  && parameters.metadados.container[i].systemName != "CoProdutosServicos"){
+				iform += 1
+				guid = gerarGUID();
+				//variavel necessaria para marcar o step ativo (no caso, o primeiro)
+				isActive = (iform == 0) ? "current" : "";
+				var number = iform  + 1;
+				htmlControlsTabs += "<div containerid='" + parameters.metadados.container[i].ID + "' class=\"erpstep step col-md-3 " + isActive + "\" tabgenid=\"" + tabGenID + "\" containerOnLoad=\"" + parameters.metadados.container[i].onLoadName + "\"   data-target=\"wizard_" + i + guid + "\" data- data-formid=\"" + formID + "\" role=\"tab\">";
+				htmlControlsTabs += "<span class=\"step-number\">" + number + "</span>";
+				htmlControlsTabs += "<div class=\"step-desc\">";
+				htmlControlsTabs += "<span class=\"step-title\">" + titulosContainers[i] + "</span>";
+				htmlControlsTabs += "</div>";
+				htmlControlsTabs += "</div>";
 
-            if (parameters.metadados.container[i].systemName != "CoCadastroCliente" && parameters.metadados.container[i].systemName != "CoCadastroForncedor" && parameters.metadados.container[i].systemName != "CoEntidadePrestador" && parameters.metadados.container[i].systemName != "CoCadastroVendedor") {
-                iform += 1
-                guid = gerarGUID();
-                //variavel necessaria para marcar o step ativo (no caso, o primeiro)
-                isActive = (iform == 0) ? "current" : "";
-                var number = iform + 1;
-                htmlControlsTabs += "<div containerid='" + parameters.metadados.container[i].ID + "' class=\"erpstep step col-md-3 " + isActive + "\" tabgenid=\"" + tabGenID + "\" containerOnLoad=\"" + parameters.metadados.container[i].onLoadName + "\"   data-target=\"wizard_" + i + guid + "\" data- data-formid=\"" + formID + "\" role=\"tab\">";
-                htmlControlsTabs += "<span class=\"step-number\">" + number + "</span>";
-                htmlControlsTabs += "<div class=\"step-desc\">";
-                htmlControlsTabs += "<span class=\"step-title\">" + titulosContainers[i] + "</span>";
-                htmlControlsTabs += "</div>";
-                htmlControlsTabs += "</div>";
+				isActive = (iform == 0) ? "active" : "";
 
-                isActive = (iform == 0) ? "active" : "";
+				$("#" + forms[iform].id).wrap("<div data-containeridwizard='" + parameters.metadados.container[i].ID + "' data-guidwizard='" + tabGenID + "'  id='wizard_" + i + guid + "' class='wizard-pane " + isActive + "' data-formid=\"" + formID + "\" role=\"tabpanel\"/>")
 
-                $("#" + forms[iform].id).wrap("<div data-containeridwizard='" + parameters.metadados.container[i].ID + "' data-guidwizard='" + tabGenID + "'  id='wizard_" + i + guid + "' class='wizard-pane " + isActive + "' data-formid=\"" + formID + "\" role=\"tabpanel\"/>")
-
-            }
-        }
+			}
+		}
 
         $("#" + recipient + ">.panel>.panel-body>.wizard-pane").wrapAll("<div class=\"wizard-content\">")
 
         htmlControlsTabs = htmlControlsTabs + "</div>"
-
+        
         $("#" + recipient + ">.panel>.panel-body>.wizard-content").before(htmlControlsTabs);
 
         for (var i = 0; i < containersCount; i++) {
@@ -173,10 +173,10 @@ function createSteps(containersCount, titulosContainers, parameters) {
                     f_aba('romaneio', '358188AE-0B11-438F-8A4A-9BEBB7943D44', 'Picking', 'false', returnCookie("EnterpriseID"));
                 }
                     //else if ($(".steps.steps-xs.row").find("span.step-title")[0].innerHTML == "Nota Fiscal") {
-                    //else if (layoutid.includes("07ca6db2-a587-4a59-aa82-95f1795bdf68")) {
+                //else if (layoutid.includes("07ca6db2-a587-4a59-aa82-95f1795bdf68")) {
                     //LancaEstoqueNota();
                     //f_aba('layNFe', '7df84e2b-376c-4af9-8d16-42ad021b7542', 'Controle de NF-e', 'true', returnCookie("EnterpriseID"));
-                    //}
+                //}
                     //else if ($(".steps.steps-xs.row").find("span.step-title")[0].innerHTML == "Picking") {
                 else if (layoutid.includes("358188ae-0b11-438f-8a4a-9bebb7943d44")) {
                     AlterStatusRomaneioJS();

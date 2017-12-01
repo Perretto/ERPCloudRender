@@ -1483,10 +1483,10 @@ function editLayout(button, layoutName, layoutID, title, loadData, paramReferenc
                 }
             });
 
-            $("#" + tabGenID + ">.panel .wizard-buttons").html("");
+            $("#" +tabGenID + ">.panel .wizard-buttons").html("");
 
             //var wizard = $("#" + layoutID + "_" + tabGenID + ">.panel").wizard(options).data('wizard');
-            var wizard = $("#" + tabGenID + ">.panel").wizard(options).data('wizard');
+			var wizard = $("#" +tabGenID + ">.panel").wizard(options).data('wizard');
 
         }
 
@@ -2133,10 +2133,10 @@ function ExcluirCancelaNFpedidoVenda(idVenda, obj) {
 }
 
 function ExcluirPedidoVenda(idVenda, obj) {
-
+    
     //cancela a nota se existir
     ExcluirCancelaNFpedidoVenda(idVenda, obj);
-
+    
     //cancela o pedido de vendas
     var Dados = "";
     Dados = Dados + "EnterpriseID=" + returnCookie("EnterpriseID");

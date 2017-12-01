@@ -10,6 +10,7 @@ const router = express.Router()
 server.use('/api', router)
 // config for your database
 var config = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'eCloud-homologa'};
+var configMetaObjecto = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'intelecta10_homologa'};
 //var config = {user: 'sa', password: '1nt3l3ct@', server: '54.149.163.193',  database: 'eCloud-roadmap'};
 
 router.route('/listall/:id').get(function(req, res) {
@@ -407,3 +408,98 @@ router.route('/saveHtml').post(function(req, res) {
     });
 });
 
+router.route('/getSelectListAll/:enterpriseID/:layoutID').get(function(req, res) {
+    var enterpriseID = req.param('enterpriseID');
+    var layoutID = req.param('layoutID');
+
+    var select = "SELECT bTab.nm_SystemName +'.'+ bProp.nm_SystemName AS Col, bTab.nm_SystemName AS Tab ";
+    select += "FROM Control c ";
+    select += "INNER JOIN BaseObject b ON c.id=b.ID ";
+    select += "INNER JOIN Property prop ON prop.id=c.PropertyID ";
+    select += "INNER JOIN BaseObject bProp ON bProp.id=prop.id ";
+    select += "INNER JOIN BaseObject bTab ON bTab.id=bProp.OwnerObjectID ";
+    select += "WHERE c.sn_visiblegrid = 1 AND  ";
+    select += "b.OwnerObjectID = ( SELECT TOP 1 Co.ID AS IDContainerPrincipal FROM Layout L  ";
+    select += "                    INNER JOIN Form f ON L.ID=f.LayoutID ";
+    select += "                    INNER JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID ";
+    select += "                    INNER JOIN Container Co ON Co.ID=fxc.ContainerID ";
+    select += "                    WHERE L.ID='" + layoutID + "' ";
+    select += "                    ORDER BY fxc.nr_DisplaySequence ) ";
+    select += "ORDER BY c.nr_ScreenSequence ";
+
+    sql.close()
+    // connect to your database
+    sql.connect(configMetaObjecto, function (err) {    
+        if (err) console.log(err);
+        // create Request object
+        var request = new sql.Request();
+         // query to the database and get the records
+        request.query(select, function (err, recordset) {            
+            if (err) console.log(err)
+            //select no sql
+            var sqlfinal = ""
+            if(recordset.recordsets[0].length > 0){
+                sqlfinal = "SELECT"
+                for (let i = 0; i < recordset.recordsets[0].length; i++) {
+                    const element = recordset.recordsets[0][i];
+                    if(i == 0){
+                        sqlfinal += " " + element.Col
+                    }else{
+                        sqlfinal += ", " + element.Col
+                    }
+                }
+                sqlfinal += " FROM " + recordset.recordsets[0][0].Tab
+            }
+            // send records as a response
+            res.send(sqlfinal)
+        });
+    });
+});
+
+router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res) {
+    var enterpriseID = req.param('enterpriseID');
+    var layoutID = req.param('layoutID');
+
+    var select = "SELECT bTab.nm_SystemName +'.'+ bProp.nm_SystemName AS Col, bTab.nm_SystemName AS Tab ";
+    select += "FROM Control c ";
+    select += "INNER JOIN BaseObject b ON c.id=b.ID ";
+    select += "INNER JOIN Property prop ON prop.id=c.PropertyID ";
+    select += "INNER JOIN BaseObject bProp ON bProp.id=prop.id ";
+    select += "INNER JOIN BaseObject bTab ON bTab.id=bProp.OwnerObjectID ";
+    select += "WHERE c.sn_visiblegrid = 1 AND  ";
+    select += "b.OwnerObjectID = ( SELECT TOP 1 Co.ID AS IDContainerPrincipal FROM Layout L  ";
+    select += "                    INNER JOIN Form f ON L.ID=f.LayoutID ";
+    select += "                    INNER JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID ";
+    select += "                    INNER JOIN Container Co ON Co.ID=fxc.ContainerID ";
+    select += "                    WHERE L.ID='" + layoutID + "' ";
+    select += "                    ORDER BY fxc.nr_DisplaySequence ) ";
+    select += "ORDER BY c.nr_ScreenSequence ";
+
+    sql.close()
+    // connect to your database
+    sql.connect(configMetaObjecto, function (err) {    
+        if (err) console.log(err);
+        // create Request object
+        var request = new sql.Request();
+         // query to the database and get the records
+        request.query(select, function (err, recordset) {            
+            if (err) console.log(err)
+            //select no sql
+            var sqlfinal = ""
+            if(recordset.recordsets[0].length > 0){
+                sqlfinal = "SELECT"
+                for (let i = 0; i < recordset.recordsets[0].length; i++) {
+                    const element = recordset.recordsets[0][i];
+                    if(i == 0){
+                        sqlfinal += " " + element.Col
+                    }else{
+                        sqlfinal += ", " + element.Col
+                    }
+                }
+                sqlfinal += " FROM " + recordset.recordsets[0][0].Tab
+            }
+            // send records as a response
+            res.send(sqlfinal)
+        });
+    });
+});

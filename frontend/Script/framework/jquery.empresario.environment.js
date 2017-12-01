@@ -19,26 +19,29 @@ function checkEnvironment(sn_loadEnterprises) {
 
     var url = getGlobalParameters("urlPlataforma") + "/api/Environment/GetEnvironment";
     var dados = "";
-    //Produção
-    //var full = window.location.host;
-    //var parts = full.split('.');
-    //if (parts.length > 3) {
-    //    dados = parts[0];
-    //    if (dados == "54") {
-    //        dados = "demo";
-    //    }
 
-    //    if (!sn_loadEnterprises)
-    //        getAjaxParameter(url, dados, function (result) { welcome(result) });
-    //    else
-    //        getAjaxParameter(url, dados, function (result) { CreateEnterprise(result) });
-    //}
-    //else {
-    //    window.location = "http://intelecta.com.br";;
-    //}
+    //Produção
+    /*
+    var full = window.location.host;
+    var parts = full.split('.');
+    if (parts.length > 3) {
+        dados = parts[0];
+        if (dados == "54") {
+            dados = "demo";
+        }
+
+        if (!sn_loadEnterprises)
+            getAjaxParameter(url, dados, function (result) { welcome(result) });
+        else
+            getAjaxParameter(url, dados, function (result) { CreateEnterprise(result) });
+    }
+    else {
+        window.location = "http://intelecta.com.br";;
+    }
+    */
 
     //Desenvolvimento
-    dados = "cremon_desenv";
+    dados = "homologa";
 
     if (!sn_loadEnterprises)
         getAjaxParameter(url, dados, function (result) { welcome(result) });

@@ -178,7 +178,7 @@ function openLayout(button, tabGenID) {
 
     var $tabNav = $(button).parents("form .panel.panel-nav");
     toogleColapseContainer($tabNav, true)
-    $($tabNav).hide()
+	$($tabNav).hide()
     $("#" + formID).show();
 
     var form = $(button).attr("data-formid");
@@ -190,7 +190,7 @@ function openLayout(button, tabGenID) {
     if (formTelaIDNavigation) {
         if (formTelaIDNavigation.length > 0) {
             formID = $(formTelaIDNavigation[0]).attr("data-tabgenlayout");
-
+            
             var onload = $("[tabgenid='" + formID + "']");
             if (onload) {
                 if (onload.length > 0) {
@@ -202,7 +202,7 @@ function openLayout(button, tabGenID) {
             }
         }
     }
-
+    
 
 }
 
@@ -388,7 +388,7 @@ function clickSearch(tabGenID, layoutName, layoutID, load, listartodos) {
                 Tables[i] = li[i].getAttribute("data-table");
                 Table[i + 1] = "cliente";
                 Tables[i + 1] = "cliente";
-            } else if (layoutName == 'cadastrodefornecedores') {
+            }else if (layoutName == 'cadastrodefornecedores') {
                 Table[i] = li[i].getAttribute("data-table");
                 Tables[i] = li[i].getAttribute("data-table");
                 Table[i + 1] = "fornecedor";
@@ -409,8 +409,8 @@ function clickSearch(tabGenID, layoutName, layoutID, load, listartodos) {
             }
         }
 
-
-        PropertyID[i] = li[i].getAttribute("data-propertyID");
+        
+        PropertyID[i] = li[i].getAttribute("data-propertyID");       
         Field[i] = li[i].getAttribute("data-field");
         LayoutID = li[i].getAttribute("data-layoutID");
     }
@@ -1081,9 +1081,9 @@ function filleditnavigation(filtro, LayoutID, Fill1PropertyID, tabGenID) {
                     var formID = $(formTelaIDNavigation[0]).attr("data-tabgenlayout");
                     var $tabNav = $(formTelaIDNavigation[0]).parents("form .panel.panel-nav");
                     toogleColapseContainer($tabNav, true)
-                    $($tabNav).hide();
+					$($tabNav).hide();
                     $("#" + formID).show();
-
+                    
                     var onload = $("[tabgenid='" + formID + "']");
                     if (onload) {
                         if (onload.length > 0) {

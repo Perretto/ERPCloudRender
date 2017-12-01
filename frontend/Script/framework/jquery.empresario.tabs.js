@@ -54,7 +54,6 @@ function fechaAba(id) {
 }
 
 function atualizaAba(formID, layoutID, tabGenID, forcingTemplate, layoutType, urlRenderLayout, urlRenderLayoutData, titleMenu) {
-    var htm = $("#controls-tabs li a[href='#" + tabGenID + "'] .tabControls").html();
     $("#controls-tabs li a[href='#" + tabGenID + "'] .tabControls").replaceWith("<img src='images/loader.gif' height='15px' />");
     if (urlRenderLayout) {
         getAjaxParameter(urlRenderLayout, urlRenderLayoutData, function () {
@@ -65,6 +64,5 @@ function atualizaAba(formID, layoutID, tabGenID, forcingTemplate, layoutType, ur
                 replaceTabControls(formID, layoutID, tabGenID, false, layoutType, urlRenderLayout, urlRenderLayoutData, titleMenu) 
             });
     }
-    $("#controls-tabs li a[href='#" + tabGenID + "'] .tabControls").replaceWith(htm);
-}
+    }
 
