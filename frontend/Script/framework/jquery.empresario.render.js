@@ -70,7 +70,7 @@ function CreateAba(nameLayout, layoutID, titleMenu, dados, navigation, container
     //Agora é passado por parametro.
     //var tabGenID = gerarGUID();
 
-    layoutID = layoutID;
+    //layoutID = layoutID;
 
 	var userid = returnCookie("UserID");
 	if (userid = "null") {

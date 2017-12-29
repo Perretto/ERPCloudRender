@@ -412,21 +412,27 @@ router.route('/getSelectListAll/:enterpriseID/:layoutID').get(function(req, res)
     var enterpriseID = req.param('enterpriseID');
     var layoutID = req.param('layoutID');
 
-    var select = "SELECT bTab.nm_SystemName +'.'+ bProp.nm_SystemName AS Col, bTab.nm_SystemName AS Tab ";
+    //var select = "SELECT bTab.nm_SystemName +'.'+ bProp.nm_SystemName AS Col, bTab.nm_SystemName AS Tab, ";
+    var select = "SELECT bTab.nm_SystemName + '.' + bProp.nm_SystemName + ' AS ''' + bTab.nm_SystemName + '.' + bProp.nm_SystemName + '''' AS Col, bTab.nm_SystemName AS Tab, ";
+    select += "    (select top 1 bt.nm_SystemName from BaseObject b ";
+    select += "		inner join Property p on b.id=p.id inner join BaseObject bt on bt.id=p.DataTypeID ";
+    //select += "		where b.id=bProp.id and bProp.nm_SystemName like 'id_%') AS TabFK ";
+    select += "		where b.id=bProp.id and bProp.nm_SystemName like 'id_%') AS TabFK ";
     select += "FROM Control c ";
     select += "INNER JOIN BaseObject b ON c.id=b.ID ";
     select += "INNER JOIN Property prop ON prop.id=c.PropertyID ";
     select += "INNER JOIN BaseObject bProp ON bProp.id=prop.id ";
     select += "INNER JOIN BaseObject bTab ON bTab.id=bProp.OwnerObjectID ";
-    select += "WHERE c.sn_visiblegrid = 1 AND  ";
+    select += "WHERE (c.sn_visiblegrid = 1 OR prop.sn_PrimaryKey=1) AND ";
     select += "b.OwnerObjectID = ( SELECT TOP 1 Co.ID AS IDContainerPrincipal FROM Layout L  ";
     select += "                    INNER JOIN Form f ON L.ID=f.LayoutID ";
     select += "                    INNER JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID ";
     select += "                    INNER JOIN Container Co ON Co.ID=fxc.ContainerID ";
-    select += "                    WHERE L.ID='" + layoutID + "' ";
+    select += "                    WHERE L.ID='" + layoutID + "'  and bTab.ID=L.PrincipalDataTypeID ";
     select += "                    ORDER BY fxc.nr_DisplaySequence ) ";
     select += "ORDER BY c.nr_ScreenSequence ";
 
+    console.log(select);
     sql.close()
     // connect to your database
     sql.connect(configMetaObjecto, function (err) {    
@@ -449,6 +455,23 @@ router.route('/getSelectListAll/:enterpriseID/:layoutID').get(function(req, res)
                     }
                 }
                 sqlfinal += " FROM " + recordset.recordsets[0][0].Tab
+                
+                switch (layoutID) {
+                    case "d82d11c8-ea16-47c7-be04-10423467f04e":
+                        sqlfinal += " WHERE entidade.sn_tipoentidadecliente=1" 
+                        break;
+                    case "589b6dae-4b0b-41f1-9516-3eaf235dff61":
+                        sqlfinal += " WHERE entidade.sn_tipoentidadefornecedor=1" 
+                        break;
+                    case "74cfff79-da65-4172-8f8c-e6ce92da5819":
+                        sqlfinal += " WHERE entidade.sn_tipoentidadeprestador=1" 
+                        break;
+                    case "26d46f90-5b1f-4e64-b2a8-b97090df03dc":
+                        sqlfinal += " WHERE entidade.sn_tipoentidadevendedor=1" 
+                        break;
+                    default:
+                        break;
+                }
             }
             // send records as a response
             res.send(sqlfinal)
@@ -460,46 +483,124 @@ router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res)
     var enterpriseID = req.param('enterpriseID');
     var layoutID = req.param('layoutID');
 
-    var select = "SELECT bTab.nm_SystemName +'.'+ bProp.nm_SystemName AS Col, bTab.nm_SystemName AS Tab ";
-    select += "FROM Control c ";
-    select += "INNER JOIN BaseObject b ON c.id=b.ID ";
-    select += "INNER JOIN Property prop ON prop.id=c.PropertyID ";
-    select += "INNER JOIN BaseObject bProp ON bProp.id=prop.id ";
-    select += "INNER JOIN BaseObject bTab ON bTab.id=bProp.OwnerObjectID ";
-    select += "WHERE c.sn_visiblegrid = 1 AND  ";
-    select += "b.OwnerObjectID = ( SELECT TOP 1 Co.ID AS IDContainerPrincipal FROM Layout L  ";
-    select += "                    INNER JOIN Form f ON L.ID=f.LayoutID ";
-    select += "                    INNER JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID ";
-    select += "                    INNER JOIN Container Co ON Co.ID=fxc.ContainerID ";
-    select += "                    WHERE L.ID='" + layoutID + "' ";
-    select += "                    ORDER BY fxc.nr_DisplaySequence ) ";
-    select += "ORDER BY c.nr_ScreenSequence ";
-
+    var select = "SELECT bTab.nm_SystemName + '.' + bCol.nm_SystemName + ' AS ''' + bTab.nm_SystemName + '.' + bCol.nm_SystemName + '''' as Col, bTab.nm_SystemName as Tab, ";
+    select += "   (select top 1 BaseObject.nm_SystemName from form inner join FormXContainer ON form.id=FormXContainer.BaseObjectID ";
+    select += "     inner join Container ON Container.ID=FormXContainer.ContainerID ";
+    select += "     inner join BaseObject ON BaseObject.ID=Container.PrincipalDataTypeID ";
+    select += "     where form.LayoutID='" + layoutID + "' ";
+    select += "     order by FormXContainer.nr_DisplaySequence) As TabPrincipal, ";
+    select += "     bTab.DerivedFromID, ";
+    select += "	  (select top 1 bt.nm_SystemName from BaseObject b ";
+    select += "     inner join Property p on b.id=p.id inner join BaseObject bt on bt.id=p.DataTypeID ";
+    select += "		where b.id=bCol.id and bCol.nm_SystemName like 'id_%') AS ColPrincipal ";
+    select += "FROM BaseObject bTab ";
+    select += "    inner join BaseObject bCol ON bTab.ID = bCol.OwnerObjectID ";
+    select += "    inner join Property prop ON prop.ID = bCol.ID ";
+    select += "    inner join DataType dt ON dt.ID = bTab.ID ";
+    select += "    inner join BaseObject bDT ON bDT.ID = prop.DataTypeID ";
+    select += "WHERE bCol.ID in ( ";
+    select += "					SELECT c.PropertyID FROM Control c ";
+    select += "					INNER JOIN BaseObject b ON c.id=b.ID ";
+    select += "					WHERE b.OwnerObjectID in ";
+    select += "					( ";
+    select += "						(SELECT Co1.ID FROM Layout L ";
+    select += "							INNER JOIN Form f ON L.ID=f.LayoutID ";
+    select += "							INNER JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID ";
+    select += "							INNER JOIN Container Co1 ON Co1.ID=fxc.ContainerID ";
+    select += "							LEFT JOIN FormXContainer fxc2 ON fxc2.BaseObjectID=fxc.ContainerID ";
+    select += "							LEFT JOIN Container Co2 ON Co2.ID=fxc2.ContainerID ";
+    select += "							LEFT JOIN FormXContainer fxc3 ON fxc3.BaseObjectID=fxc.ContainerID ";
+    select += "							LEFT JOIN Container Co3 ON Co3.ID=fxc3.ContainerID ";
+    select += "						WHERE L.ID='" + layoutID + "' ";
+    select += "						GROUP BY Co1.ID) ";
+    select += "						UNION ";
+    select += "						(SELECT Co2.ID FROM Layout L ";
+    select += "							INNER JOIN Form f ON L.ID=f.LayoutID ";
+    select += "							INNER JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID ";
+    select += "							INNER JOIN Container Co1 ON Co1.ID=fxc.ContainerID ";
+    select += "							LEFT JOIN FormXContainer fxc2 ON fxc2.BaseObjectID=fxc.ContainerID ";
+    select += "							LEFT JOIN Container Co2 ON Co2.ID=fxc2.ContainerID ";
+    select += "							LEFT JOIN FormXContainer fxc3 ON fxc3.BaseObjectID=fxc.ContainerID ";
+    select += "							LEFT JOIN Container Co3 ON Co3.ID=fxc3.ContainerID ";
+    select += "						WHERE L.ID='" + layoutID + "' ";
+    select += "						GROUP BY Co2.ID) ";
+    select += "						UNION ";
+    select += "						(SELECT Co3.ID FROM Layout L ";
+    select += "							INNER JOIN Form f ON L.ID=f.LayoutID ";
+    select += "							INNER JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID ";
+    select += "							INNER JOIN Container Co1 ON Co1.ID=fxc.ContainerID ";
+    select += "							LEFT JOIN FormXContainer fxc2 ON fxc2.BaseObjectID=fxc.ContainerID ";
+    select += "							LEFT JOIN Container Co2 ON Co2.ID=fxc2.ContainerID ";
+    select += "							LEFT JOIN FormXContainer fxc3 ON fxc3.BaseObjectID=fxc.ContainerID ";
+    select += "							LEFT JOIN Container Co3 ON Co3.ID=fxc3.ContainerID ";
+    select += "						WHERE L.ID='" + layoutID + "' ";
+    select += "						GROUP BY Co3.ID) ";
+    select += "					) ";
+    select += "				 ) ";
+    select += "ORDER BY bTab.nm_SystemName, prop.nr_Sequence, bCol.nm_SystemName ";
+    
     sql.close()
     // connect to your database
     sql.connect(configMetaObjecto, function (err) {    
         if (err) console.log(err);
         // create Request object
         var request = new sql.Request();
-         // query to the database and get the records
+        // query to the database and get the records
         request.query(select, function (err, recordset) {            
             if (err) console.log(err)
             //select no sql
-            var sqlfinal = ""
+            var sqlfinal = "";
+            var join = "";
+            var listaTabelas = "";
+            var tabelaPrincipal = "";
             if(recordset.recordsets[0].length > 0){
                 sqlfinal = "SELECT"
                 for (let i = 0; i < recordset.recordsets[0].length; i++) {
                     const element = recordset.recordsets[0][i];
                     if(i == 0){
-                        sqlfinal += " " + element.Col
+                        //if(element.ColPrincipal != null){
+                        //    sqlfinal += " " + element.ColPrincipal
+                        //}else{
+                            sqlfinal += " " + element.Col;
+                        //}
                     }else{
-                        sqlfinal += ", " + element.Col
+                        //if(element.ColPrincipal != null){
+                        //    sqlfinal += ", " + element.ColPrincipal
+                        //}else{
+                            sqlfinal += ", " + element.Col;
+                        //}
+                    }
+
+                    tabelaPrincipal = element.TabPrincipal;
+                    if(listaTabelas.indexOf("#" + element.Tab + "#") == -1){
+                        listaTabelas += "#" + element.Tab + "#"
+                    
+                        var tempFK = "id_" + element.TabPrincipal;
+                        if(join == ""){ join = element.TabPrincipal }
+                        if(element.TabPrincipal != element.Tab){
+
+                            if(element.TabPrincipal == "entidade"){
+                                if(element.Tab == "cliente" || element.Tab == "vendedor" || element.Tab == "prestador" || element.Tab == "fornecedor" || element.Tab == "vendedor"){
+                                    tempFK = "id"
+                                }else{
+                                    tempFK = "id_" + element.TabPrincipal;
+                                }
+                            }
+
+                            if(element.DerivedFromID == "00000000-0000-0000-0000-000000000000"){
+                                join += " LEFT JOIN " + element.Tab + " ON " + element.TabPrincipal + ".id=" + element.Tab + "." + tempFK
+                            }else{
+                                join += " INNER JOIN " + element.Tab + " ON " + element.TabPrincipal + ".id=" + element.Tab + "." + tempFK
+                            }
+                        }
                     }
                 }
-                sqlfinal += " FROM " + recordset.recordsets[0][0].Tab
+                sqlfinal += " FROM " + join //recordset.recordsets[0][0].Tab
+                sqlfinal += " WHERE " + tabelaPrincipal + ".id='{{id}}'"
             }
+            
             // send records as a response
-            res.send(sqlfinal)
+            res.send(sqlfinal);
         });
     });
 });

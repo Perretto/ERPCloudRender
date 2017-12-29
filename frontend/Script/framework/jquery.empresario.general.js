@@ -115,7 +115,7 @@ function getAjaxParameter(url, dados, callback) {
         url: url + "?Dados=" + dados,
         dataType: "json",
         //cors: true,
-        async: true,
+        async: false,
         crossDomain: true,
         success: function (result) {
             resultadoParametroExterno = result;

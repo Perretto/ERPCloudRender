@@ -421,7 +421,7 @@ function clickSearch(tabGenID, layoutName, layoutID, load, listartodos) {
         if (load == true) {
             $("#table_" + tabGenID + "_btnnovo").click();
         }
-
+        atualizaDadosHtmlMongoDB(tabGenID, LayoutID);
     });
 
 
@@ -822,6 +822,52 @@ function createGridNav(parameters) {
             }
         }
     }
+}
+
+function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
+    var tabGenScreen = $("#table_" + tabGenID + "_btnnovo").attr("data-tabgenlayout");
+    if(!tabGenScreen){
+        tabGenScreen = tabGenID;
+    }
+    //pega a tag form no html
+    var _html = $("#" + tabGenID).html();
+    var enterpriseID = getUrlVar("enterpriseID")
+
+    //pega o select all
+    var _listall = "";
+    var urllistall="http://localhost:3001/api/getSelectListAll/" + enterpriseID + "/" + layoutID;
+    $.ajax({
+        method: "GET",
+        async: false,
+        url: urllistall
+    })
+    .done(function( result ) {
+        _listall = result;
+    });
+
+
+    //pega o select da tela
+    var _finddata = "";
+    var urldata="http://localhost:3001/api/getSelecFinddata/" + enterpriseID + "/" + layoutID;
+    $.ajax({
+        method: "GET",
+        async: false,
+        url: urldata
+    })
+    .done(function( result ) {
+        _finddata = result;
+    });
+    
+
+    //salva
+    $.ajax({
+        method: "POST",
+        url: "http://localhost:3001/api/saveHtml",
+        data: { layoutID: layoutID, html: _html, tabgenid: tabGenScreen, listall: _listall, finddata: _finddata }
+    })
+    .done(function( msg ) {
+        //alert( "Data Saved: " + msg );
+    });
 }
 
 function sharpGridnav(containerID) {

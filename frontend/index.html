@@ -519,6 +519,8 @@
 
 
     <script>
+    
+                
         (function (document, window, $) {
             'use strict';
 			//var Site = window.Site;
@@ -540,48 +542,9 @@
                 
                 //abre tela
                 var tabGenID = gerarGUID();
-				CreateAba(systemName, layoutID, titleMenu, dados, "", "", "", "", "", tabGenID, function(){
-                    //pega a tag form no html
-                    var _html = $("#" + tabGenID).html();
-                    
-                    //pega o select all
-                    var _listall = "";
-                    var urllistall="http://localhost:3001/api/getSelectListAll/" + enterpriseID + "/" + layoutID;
-                    $.ajax({
-                        method: "GET",
-                        async: false,
-                        url: urllistall
-                    })
-                    .done(function( result ) {
-                        _listall = result;
-                    });
 
-
-                    //pega o select da tela
-                    var _finddata = "";
-                    var urldata="http://localhost:3001/api/getSelecFinddata/" + enterpriseID + "/" + layoutID;
-                    $.ajax({
-                        method: "GET",
-                        async: false,
-                        url: urldata
-                    })
-                    .done(function( result ) {
-                        _finddata = result;
-                    });
-                    
-
-                    //salva
-                    $.ajax({
-                        method: "POST",
-                        url: "http://localhost:3001/api/saveHtml",
-                        data: { layoutID: layoutID, html: _html, tabgenid: tabGenID, listall: _listall, finddata: _finddata }
-                    })
-                    .done(function( msg ) {
-                        alert( "Data Saved: " + msg );
-                    });
-    
-                });
-                    
+				CreateAba(systemName, layoutID, titleMenu, dados, true, "", "", "", "", tabGenID);
+                //atualizaDadosHtmlMongoDB(tabGenID, layoutID);
 
 				$(window).keydown(function (event) {
 					if (event.keyCode == 13) {
