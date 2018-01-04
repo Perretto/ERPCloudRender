@@ -1,0 +1,32 @@
+<html>
+<head>
+</head>
+<body>
+<script>
+	var systemName = []
+	//systemName.push("cadastrodeclientes")
+	//systemName.push("cadastrodefornecedores")
+	//systemName.push("cadastrodeprestadores")
+	//systemName.push("cadastrodevendedores")
+	
+	systemName.push("cadastrodeprodutoseservicos")
+	//systemName.push("listadeprecos")
+	console.log(systemName);
+	
+	var layouts = []
+	//layouts.push("d82d11c8-ea16-47c7-be04-10423467f04e")
+	//layouts.push("589b6dae-4b0b-41f1-9516-3eaf235dff61")
+	//layouts.push("74cfff79-da65-4172-8f8c-e6ce92da5819")
+	//layouts.push("26d46f90-5b1f-4e64-b2a8-b97090df03dc")
+	
+	layouts.push("d0318f5c-a014-429c-895a-a5e542862465")
+	//layouts.push("7be10f8c-0109-46fa-869d-c0054e4f066b")
+	console.log(layouts);
+	
+	for(var i=0; i<layouts.length; i++){
+		console.log("ok");
+		window.open("file:///D:/ERPCloudRender/frontend/index.html?enterpriseID=561BF579-5655-42DE-A290-038C6F76B974&systemName=" + systemName[i] + "&layoutID=" + layouts[i] + "&publish=false", "_blank")
+	}
+</script>
+</body>
+</html>
