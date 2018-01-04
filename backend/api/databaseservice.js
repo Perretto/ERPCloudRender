@@ -498,39 +498,6 @@ router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res)
     select += "	    where b.id=bCol.id and bCol.nm_SystemName like 'id_%'";
     select += "	) AS TabFK, ";
     
-    /*
-    select += "	(select top 1 bCTR.nm_SystemName ";
-    select += "		from form inner join FormXContainer ON form.id=FormXContainer.BaseObjectID ";
-    select += "     inner join Container ON Container.ID=FormXContainer.ContainerID ";
-    select += "     inner join BaseObject ON BaseObject.ID=Container.PrincipalDataTypeID ";
-    select += "	    inner join Control CTR ON CTR.PropertyID=bCol.ID";
-    select += "	    inner join BaseObject bCTR ON bCTR.ID=CTR.Fill1PropertyID";
-    select += "     where form.LayoutID='" + layoutID + "' and Container.PrincipalDataTypeID=bTab.ID and  bCol.ID=CTR.PropertyID ";
-    select += "	UNION ";
-    select += "		(select top 1 bCTR.nm_SystemName ";
-    select += "	    from form inner join FormXContainer ON form.id=FormXContainer.BaseObjectID ";
-    select += "		inner join Container ON Container.ID=FormXContainer.ContainerID ";
-    select += "		LEFT JOIN FormXContainer fxc2 ON fxc2.BaseObjectID=FormXContainer.ContainerID ";
-    select += "		LEFT JOIN Container Co2 ON Co2.ID=fxc2.ContainerID ";
-    select += "	    inner join Control CTR ON CTR.PropertyID=bCol.ID";
-    select += "	    inner join BaseObject bCTR ON bCTR.ID=CTR.Fill2PropertyID";
-    select += "     where form.LayoutID='" + layoutID + "' and Co2.PrincipalDataTypeID=bTab.ID and bCol.ID=CTR.PropertyID";
-    select += "	    GROUP BY bCTR.nm_SystemName)";
-    select += "	UNION";
-    select += "		(select top 1 bCTR.nm_SystemName ";
-    select += "	    from form inner join FormXContainer ON form.id=FormXContainer.BaseObjectID ";
-    select += "		inner join Container ON Container.ID=FormXContainer.ContainerID ";
-    select += "		LEFT JOIN FormXContainer fxc2 ON fxc2.BaseObjectID=FormXContainer.ContainerID ";
-    select += "		LEFT JOIN Container Co2 ON Co2.ID=fxc2.ContainerID ";
-    select += "	    inner join Control CTR ON CTR.PropertyID=bCol.ID";
-    select += "	    inner join BaseObject bCTR ON bCTR.ID=CTR.Fill2PropertyID";
-    select += "		LEFT JOIN FormXContainer fxc3 ON fxc3.BaseObjectID=fxc2.ContainerID ";
-    select += "		LEFT JOIN Container Co3 ON Co3.ID=fxc3.ContainerID ";
-    select += "     where form.LayoutID='" + layoutID + "' and Co3.PrincipalDataTypeID=bTab.ID and bCol.ID=CTR.PropertyID";
-    select += "	    GROUP BY bCTR.nm_SystemName)";
-    select += "	) AS ColFKFill1, ";
-    */
-    
     select += "    (select top 1 bCTR.nm_SystemName ";
     select += "      from form inner join FormXContainer ON form.id=FormXContainer.BaseObjectID ";
     select += "      inner join Container ON Container.ID=FormXContainer.ContainerID ";
@@ -720,4 +687,79 @@ router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res)
             res.send(sqlfinal);
         });
     });
+});
+
+
+
+
+router.route('/getSelecFindDataGrid').post(function(req, res) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype'); // If needed
+    res.setHeader('Access-Control-Allow-Credentials', true); // If needed
+    const ObjectID = require('mongodb').ObjectID
+    
+    var objectId = new ObjectID();
+    var submit = req.body;
+    console.log(submit)
+    for (let index = 0; index < submit.length; index++) {
+        var p_containerID = submit[index]["containerID"];
+        
+        var select = "";
+        select += "SELECT (cTab.nm_SystemName + '.' + cprop.nm_SystemName + ' AS ''' + cTab.nm_SystemName + '.' + cprop.nm_SystemName + '''') AS Col, ";
+        select += "(cTab.nm_SystemName) AS Tab ";
+        select += "FROM BaseObject bctr ";
+        select += "INNER JOIN Control ctr ON ctr.ID=bctr.ID ";
+        select += "INNER JOIN BaseObject cprop ON cprop.ID=ctr.PropertyID ";
+        select += "INNER JOIN BaseObject cTab ON cprop.OwnerObjectID=cTab.ID ";
+        select += "WHERE bctr.OwnerObjectID='" + p_containerID + "'";
+            
+
+        sql.close()
+        // connect to your database
+        sql.connect(configMetaObjecto, function (err) {    
+            if (err) console.log(err);
+            // create Request object
+            var request = new sql.Request();
+            // query to the database and get the records
+            request.query(select, function (err, recordset) {
+                if (err) console.log(err)
+                //select no sql
+                var sqlfinal = "";
+                var join = "";
+                var listaTabelas = "";
+                var tabelaPrincipal = "";
+                if(recordset.recordsets[0].length > 0){
+                    sqlfinal = "SELECT";
+                    for (let i = 0; i < recordset.recordsets[0].length; i++) {
+                        const element = recordset.recordsets[0][i];
+                        if(i == 0){
+                                sqlfinal += " " + element.Col;
+                        }else{
+                                sqlfinal += ", " + element.Col;                        
+                        }
+
+                        tabelaPrincipal = element.Tab;
+                        if(listaTabelas.indexOf("#" + element.Tab + "#") == -1){
+                            listaTabelas += "#" + element.Tab + "#";
+                        
+                            var tempFK = "id_" + element.Tab;
+                            if(join == ""){ join = element.Tab }
+                            
+                        }
+                    }
+                    sqlfinal += " FROM " + join //recordset.recordsets[0][0].Tab
+                    sqlfinal += " WHERE " + tabelaPrincipal + ".id='{{id}}'"
+                }
+                
+                submit[index]["findgriddata"] = sqlfinal;
+                if(submit.length == index + 1){
+                    // send records as a response
+                    res.send(submit);
+                }
+               
+            });
+        });
+    }
+    
 });
