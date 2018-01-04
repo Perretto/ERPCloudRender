@@ -675,14 +675,14 @@ router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res)
                 for (let i = 0; i < recordset.recordsets[0].length; i++) {
                     const element = recordset.recordsets[0][i];
                     if(i == 0){
-                        if(element.ColFKFill2 != null){
-                            sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ")";
+                        if(element.ColFKFill2 != null && element.TabFK != null){
+                            sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
                         }else{
                             sqlfinal += " " + element.Col;
                         }
                     }else{
-                        if(element.ColFKFill2 != null){
-                            sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ")";
+                        if(element.ColFKFill2 != null && element.TabFK != null){
+                            sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
                         }else{
                             sqlfinal += ", " + element.Col;
                         }
