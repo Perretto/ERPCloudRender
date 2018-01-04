@@ -432,7 +432,6 @@ router.route('/getSelectListAll/:enterpriseID/:layoutID').get(function(req, res)
     select += "                    ORDER BY fxc.nr_DisplaySequence ) ";
     select += "ORDER BY c.nr_ScreenSequence ";
 
-    console.log(select);
     sql.close()
     // connect to your database
     sql.connect(configMetaObjecto, function (err) {    
@@ -642,13 +641,13 @@ router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res)
                 for (let i = 0; i < recordset.recordsets[0].length; i++) {
                     const element = recordset.recordsets[0][i];
                     if(i == 0){
-                        if(element.ColFKFill2 != null && element.TabFK != null){
+                        if(element.ColFKFill2 != null && element.TabFK != null && (element.Template == "MASTERDETAIL" || element.Template == "GRID")){
                             sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
                         }else{
                             sqlfinal += " " + element.Col;
                         }
                     }else{
-                        if(element.ColFKFill2 != null && element.TabFK != null){
+                        if(element.ColFKFill2 != null && element.TabFK != null && (element.Template == "MASTERDETAIL" || element.Template == "GRID")){
                             sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
                         }else{
                             sqlfinal += ", " + element.Col;
@@ -656,6 +655,7 @@ router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res)
                     }
 
                     tabelaPrincipal = element.TabPrincipal;
+                    //evita duplicação de tabelas
                     if(listaTabelas.indexOf("#" + element.Tab + "#") == -1){
                         listaTabelas += "#" + element.Tab + "#";
                     
