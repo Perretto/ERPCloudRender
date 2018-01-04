@@ -763,3 +763,79 @@ router.route('/getSelecFindDataGrid').post(function(req, res) {
     }
     
 });
+
+
+
+router.route('/getListContainersLayout/:enterpriseID/:layoutID').get(function(req, res) {
+    var enterpriseID = req.param('enterpriseID');
+    var layoutID = req.param('layoutID');
+    const ObjectID = require('mongodb').ObjectID
+    
+    var select = "(SELECT Co1.ID, bs.nm_SystemName FROM Layout L ";
+    select += "   INNER JOIN Form f ON L.ID=f.LayoutID ";
+    select += "    INNER JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID ";
+    select += "     INNER JOIN Container Co1 ON Co1.ID=fxc.ContainerID ";
+    select += "     INNER JOIN BaseObject bs ON bs.ID=Co1.ID ";
+    select += "    LEFT JOIN FormXContainer fxc2 ON fxc2.BaseObjectID=fxc.ContainerID ";
+    select += "    LEFT JOIN Container Co2 ON Co2.ID=fxc2.ContainerID ";
+    select += "    LEFT JOIN FormXContainer fxc3 ON fxc3.BaseObjectID=fxc.ContainerID ";
+    select += "    LEFT JOIN Container Co3 ON Co3.ID=fxc3.ContainerID ";
+    select += "WHERE L.ID='" + layoutID + "' ";
+    select += "GROUP BY Co1.ID, bs.nm_SystemName) ";
+    select += "UNION ";
+    select += "(SELECT Co2.ID, bs.nm_SystemName FROM Layout L ";
+    select += "    INNER JOIN Form f ON L.ID=f.LayoutID ";
+    select += "    INNER JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID ";
+    select += "    INNER JOIN Container Co1 ON Co1.ID=fxc.ContainerID ";
+    select += "    LEFT JOIN FormXContainer fxc2 ON fxc2.BaseObjectID=fxc.ContainerID ";
+    select += "     LEFT JOIN Container Co2 ON Co2.ID=fxc2.ContainerID ";
+    select += "    INNER JOIN BaseObject bs ON bs.ID=Co2.ID ";
+    select += "    LEFT JOIN FormXContainer fxc3 ON fxc3.BaseObjectID=fxc.ContainerID ";
+    select += "    LEFT JOIN Container Co3 ON Co3.ID=fxc3.ContainerID ";
+    select += "WHERE L.ID='" + layoutID + "' ";
+    select += "GROUP BY Co2.ID, bs.nm_SystemName) ";
+    select += "UNION ";
+    select += "(SELECT Co3.ID, bs.nm_SystemName FROM Layout L ";
+    select += "    INNER JOIN Form f ON L.ID=f.LayoutID ";
+    select += "    INNER JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID ";
+    select += "    INNER JOIN Container Co1 ON Co1.ID=fxc.ContainerID ";
+    select += "    LEFT JOIN FormXContainer fxc2 ON fxc2.BaseObjectID=fxc.ContainerID ";
+    select += "    LEFT JOIN Container Co2 ON Co2.ID=fxc2.ContainerID ";
+    select += "    LEFT JOIN FormXContainer fxc3 ON fxc3.BaseObjectID=fxc.ContainerID ";
+    select += "    LEFT JOIN Container Co3 ON Co3.ID=fxc3.ContainerID ";
+    select += "    INNER JOIN BaseObject bs ON bs.ID=Co3.ID ";
+    select += "WHERE L.ID='" + layoutID + "' ";
+    select += "GROUP BY Co3.ID, bs.nm_SystemName) ";
+    
+    var objCoReturn = [];
+    
+    sql.close()
+    // connect to your database
+    sql.connect(configMetaObjecto, function (err) {    
+        if (err) console.log(err);
+        // create Request object
+        var request = new sql.Request();
+         // query to the database and get the records
+        request.query(select, function (err, recordset) {            
+            if (err) console.log(err)
+            if(recordset.recordsets[0].length > 0){
+
+                for (let i = 0; i < recordset.recordsets[0].length; i++) {
+                    const element = recordset.recordsets[0][i];
+                    var objectId = new ObjectID();
+                    var objCo = {};
+                    objCo["ID"] = objectId;
+                    objCo["containerID"] = element.ID;
+                    objCo["findgriddata"] = "";
+                    objCo["deletedata"] = "";
+                    objCo["fillgrid"] = "";
+                        
+                    objCoReturn.push(objCo);
+                }
+            }
+            // send records as a response
+            res.send(objCoReturn)
+        });
+    });
+});
+
