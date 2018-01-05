@@ -622,7 +622,6 @@ router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res)
     select += "ORDER BY prop.nr_Sequence, bTab.nm_SystemName, bCol.nm_SystemName";
     
     
-
     sql.close()
     // connect to your database
     sql.connect(configMetaObjecto, function (err) {    
@@ -690,21 +689,15 @@ router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res)
     });
 });
 
-
-
-
 router.route('/getSelecFindDataGrid').post(function(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype'); // If needed
     res.setHeader('Access-Control-Allow-Credentials', true); // If needed
-    const ObjectID = require('mongodb').ObjectID
-    
-    var objectId = new ObjectID();
+
     var submit = req.body;
     console.log(submit)
     
-
         sql.close()
         // connect to your database
         sql.connect(configMetaObjecto, function (err) { 
@@ -769,11 +762,9 @@ router.route('/getSelecFindDataGrid').post(function(req, res) {
 });
 
 
-
 router.route('/getListContainersLayout/:enterpriseID/:layoutID').get(function(req, res) {
     var enterpriseID = req.param('enterpriseID');
     var layoutID = req.param('layoutID');
-    const ObjectID = require('mongodb').ObjectID
     
     var select = "(SELECT Co1.ID, bs.nm_SystemName FROM Layout L ";
     select += "   INNER JOIN Form f ON L.ID=f.LayoutID ";
@@ -826,9 +817,10 @@ router.route('/getListContainersLayout/:enterpriseID/:layoutID').get(function(re
 
                 for (let i = 0; i < recordset.recordsets[0].length; i++) {
                     const element = recordset.recordsets[0][i];
+                    const ObjectID = require('mongodb').ObjectID
                     var objectId = new ObjectID();
                     var objCo = {};
-                    objCo["ID"] = objectId;
+                    objCo["_id"] = objectId;
                     objCo["containerID"] = element.ID;
                     objCo["findgriddata"] = "";
                     objCo["deletedata"] = "";
@@ -844,17 +836,12 @@ router.route('/getListContainersLayout/:enterpriseID/:layoutID').get(function(re
     });
 });
 
-
-
-
 router.route('/getSelecFindFillGrid').post(function(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype'); // If needed
     res.setHeader('Access-Control-Allow-Credentials', true); // If needed
-    const ObjectID = require('mongodb').ObjectID
-    
-    var objectId = new ObjectID();
+
     var submit = req.body;
     
         sql.close()
@@ -937,8 +924,6 @@ router.route('/getSelecFindFillGrid').post(function(req, res) {
     
 });
 
-
-
 router.route('/getDeleteData').post(function(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
@@ -948,32 +933,34 @@ router.route('/getDeleteData').post(function(req, res) {
     var submit = req.body;
     console.log(submit)
     
-        sql.close()
-        // connect to your database
-        sql.connect(configMetaObjecto, function (err) {   
+    sql.close()
+    // connect to your database
+    sql.connect(configMetaObjecto, function (err) {   
+        
+        for (let index = 0; index < submit.length; index++) {
+            var p_containerID = submit[index]["containerID"];
             
-            for (let index = 0; index < submit.length; index++) {
-                var p_containerID = submit[index]["containerID"];
-                
-                var select = "SELECT bbt.nm_SystemName AS Tab ";
-                select += "FROM Container ";
-                select += "INNER JOIN DataType dt ON Container.PrincipalDataTypeID=dt.ID ";
-                select += "INNER JOIN BaseObject bbt ON bbt.ID=dt.ID ";
-                select += "WHERE Container.ID = '" + p_containerID + "' ";
-                 
-                if (err) console.log(err);
+            var select = "SELECT bbt.nm_SystemName AS Tab ";
+            select += "FROM Container ";
+            select += "INNER JOIN DataType dt ON Container.PrincipalDataTypeID=dt.ID ";
+            select += "INNER JOIN BaseObject bbt ON bbt.ID=dt.ID ";
+            select += "WHERE Container.ID = '" + p_containerID + "' ";
+            
+            if (err) console.log(err);
 
-                // create Request object
-                var request = new sql.Request();
+            // create Request object
+            var request = new sql.Request();
 
             // query to the database and get the records
             request.query(select, function (err, recordset) {
                 if (err) console.log(err)
+
+                console.log(recordset);
                 //select no sql
                 var sqlfinal = "";
                 if(recordset.recordsets[0].length > 0){
-                    const element = recordset.recordsets[0][index];
-                    console.log(select)
+                    const element = recordset.recordsets[0][0];
+                    
                     if (element) {
                         if (element.Tab) {
                             sqlfinal = "DELETE FROM " + element.Tab + " WHERE id='{{id}}'";
@@ -986,7 +973,7 @@ router.route('/getDeleteData').post(function(req, res) {
                     // send records as a response
                     res.send(submit);
                 }
-               
+            
             });
         };
     });    
@@ -1002,7 +989,6 @@ router.route('/saveCollectionContainers').post(function(req, res) {
 
     for (let index = 0; index < submit.length; index++) {
         var p_containerID = submit[index]["containerID"];
-        var myobj = submit[index];
         
         var MongoClient = require('mongodb').MongoClient;
         var url = "mongodb://localhost:27017/erpcloud";
@@ -1020,7 +1006,7 @@ router.route('/saveCollectionContainers').post(function(req, res) {
                         });
                     }
                     //create new
-                    db.collection("containers").insert(myobj, function(err, res) {
+                    db.collection("containers").insert(submit[index], function(err, res) {
                     if (err) throw err;
                     db.close();
                     });
