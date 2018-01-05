@@ -839,3 +839,179 @@ router.route('/getListContainersLayout/:enterpriseID/:layoutID').get(function(re
     });
 });
 
+
+
+
+router.route('/getSelecFindFillGrid').post(function(req, res) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype'); // If needed
+    res.setHeader('Access-Control-Allow-Credentials', true); // If needed
+    const ObjectID = require('mongodb').ObjectID
+    
+    var objectId = new ObjectID();
+    var submit = req.body;
+    
+    for (let index = 0; index < submit.length; index++) {
+        var p_containerID = submit[index]["containerID"];
+        var p_LayoutID  = submit[index]["LayoutID"];
+
+        var select = "";
+        select += "SELECT (cTab.nm_SystemName + '.' + cprop.nm_SystemName + ' AS ''' + cTab.nm_SystemName + '.' + cprop.nm_SystemName + '''') AS Col, ";
+        select += "(cTab.nm_SystemName) AS Tab, ";
+        select += "(SELECT nm_SystemName FROM BaseObject WHERE ID=ctr.Fill2PropertyID ) AS ColFKFill2, ";
+        select += "(SELECT TOP 1 tab.nm_SystemName FROM BaseObject INNER JOIN BaseObject tab ON BaseObject.OwnerObjectID=tab.ID  WHERE BaseObject.ID=ctr.Fill2PropertyID ) AS TabFK ";
+        select += ", (cprop.nm_SystemName) AS Coluna, ";
+        select += " (SELECT nm_SystemName FROM BaseObject WHERE ID=ctr.Fill1PropertyID ) AS ColFKFill1 "
+        select += ", (SELECT bPrinc.nm_Systemname FROM BaseObject bPrinc INNER JOIN Layout ON Layout.principalDataTypeID=bPrinc.ID WHERE Layout.ID='" + p_LayoutID + "') AS TabPricipal ";
+        select += " FROM BaseObject bctr ";
+        select += "INNER JOIN Control ctr ON ctr.ID=bctr.ID ";
+        select += "INNER JOIN BaseObject cprop ON cprop.ID=ctr.PropertyID ";
+        select += "INNER JOIN BaseObject cTab ON cprop.OwnerObjectID=cTab.ID ";
+        select += " WHERE bctr.OwnerObjectID='" + p_containerID + "'  AND ctr.sn_visibleGrid=1";
+            
+
+        sql.close()
+        // connect to your database
+        sql.connect(configMetaObjecto, function (err) {    
+            if (err) console.log(err);
+            // create Request object
+            var request = new sql.Request();
+            // query to the database and get the records
+            request.query(select, function (err, recordset) {
+                if (err) console.log(err)
+                //select no sql
+                var sqlfinal = "";
+                var join = "";
+                var listaTabelas = "";
+                var tabelaPrincipal = "";
+                var tabelaPrincipalLayout = "";
+                if(recordset.recordsets[0].length > 0){
+                    sqlfinal = "SELECT";
+                    for (let i = 0; i < recordset.recordsets[0].length; i++) {
+                        const element = recordset.recordsets[0][i];
+                        if(i == 0){
+                            if(element.ColFKFill2 != null && element.TabFK != null ){
+                                sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
+                            }else{
+                                sqlfinal += " " + element.Col;
+                            }
+                        }else{
+                            if(element.ColFKFill2 != null && element.TabFK != null){
+                                sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
+                            }else{
+                                sqlfinal += ", " + element.Col;
+                            }
+                        }
+
+                        tabelaPrincipalLayout = element.TabPricipal;
+                        tabelaPrincipal = element.Tab;
+                        if(listaTabelas.indexOf("#" + element.Tab + "#") == -1){
+                            listaTabelas += "#" + element.Tab + "#";
+                        
+                            var tempFK = "id_" + element.Tab;
+                            if(join == ""){ join = element.Tab }
+                            
+                        }
+                    }
+                    sqlfinal += " FROM " + join //recordset.recordsets[0][0].Tab
+                    sqlfinal += " WHERE " + tabelaPrincipal + ".id_" + tabelaPrincipalLayout + "='{{id}}'"
+                }
+                
+                submit[index]["findgriddata"] = sqlfinal;
+                if(submit.length == index + 1){
+                    // send records as a response
+                    res.send(submit);
+                }
+               
+            });
+        });
+    }
+    
+});
+
+
+
+router.route('/getDeleteData').post(function(req, res) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype'); // If needed
+    res.setHeader('Access-Control-Allow-Credentials', true); // If needed
+    
+    var submit = req.body;
+    console.log(submit)
+    for (let index = 0; index < submit.length; index++) {
+        var p_containerID = submit[index]["containerID"];
+        
+        var select = "SELECT bbt.nm_SystemName AS Tab ";
+        select += "FROM Container ";
+        select += "INNER JOIN DataType dt ON Container.PrincipalDataTypeID=dt.ID ";
+        select += "INNER JOIN BaseObject bbt ON bbt.ID=dt.ID ";
+        select += "WHERE Container.ID = '" + p_containerID + "' ";
+        
+        sql.close()
+        // connect to your database
+        sql.connect(configMetaObjecto, function (err) {    
+            if (err) console.log(err);
+            // create Request object
+            var request = new sql.Request();
+            // query to the database and get the records
+            request.query(select, function (err, recordset) {
+                if (err) console.log(err)
+                //select no sql
+                var sqlfinal = "";
+                if(recordset.recordsets[0].length > 0){
+                    const element = recordset.recordsets[0][index];
+                    sqlfinal = "DELETE FROM " + element.Tab + " WHERE id='{{id}}'";
+                }
+                
+                submit[index]["deletedata"] = sqlfinal;
+                if(submit.length == index + 1){
+                    // send records as a response
+                    res.send(submit);
+                }
+               
+            });
+        });
+
+    };
+});
+
+router.route('/saveCollectionContainers').post(function(req, res) {   
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype'); // If needed
+    res.setHeader('Access-Control-Allow-Credentials', true); // If needed
+    
+    var submit = req.body;
+
+    for (let index = 0; index < submit.length; index++) {
+        var p_containerID = submit[index]["containerID"];
+        var myobj = submit[index];
+        
+        var MongoClient = require('mongodb').MongoClient;
+        var url = "mongodb://localhost:27017/erpcloud";
+        
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            db.collection("containers").find({"containerID": p_containerID}, { _id: false }).toArray(function(err, result) {
+                if (err) throw err;
+                if (result) {
+                    if (result.length > 0) {
+                        //remove old
+                        db.collection("containers").remove({"containerID": p_containerID}, function(err, res) {
+                        if (err) throw err;
+                        db.close();
+                        });
+                    }
+                    //create new
+                    db.collection("containers").insert(myobj, function(err, res) {
+                    if (err) throw err;
+                    db.close();
+                    });
+                }
+            });
+        });
+
+    };
+});
