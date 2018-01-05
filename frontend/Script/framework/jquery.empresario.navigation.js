@@ -873,7 +873,7 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
 
 
 
-
+    
     //pega os containers da tela
     var _finddata = "";
     var urldata="http://localhost:3001/api/getListContainersLayout/" + enterpriseID + "/" + layoutID;
@@ -886,9 +886,10 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
         _finddata = result;
     });
 
-
+    _finddata = JSON.stringify(_finddata)
     var urldata="http://localhost:3001/api/getSelecFindFillGrid/";
     $.ajax({
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
         method: "POST",
         async: false,
         url: urldata,
@@ -898,9 +899,10 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
         _finddata = result;
     });
 
-
+    _finddata = JSON.stringify(_finddata)
     var urldata="http://localhost:3001/api/getSelecFindDataGrid/";
     $.ajax({
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
         method: "POST",
         async: false,
         url: urldata,
@@ -910,9 +912,10 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
         _finddata = result;
     });
 
-
+   _finddata = JSON.stringify(_finddata)
     var urldata="http://localhost:3001/api/getDeleteData/";
     $.ajax({
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
         method: "POST",
         async: false,
         url: urldata,
@@ -922,9 +925,10 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
         _finddata = result;
     });
 
-
+    _finddata = JSON.stringify(_finddata)
     var urldata="http://localhost:3001/api/saveCollectionContainers/";
     $.ajax({
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
         method: "POST",
         async: false,
         url: urldata,

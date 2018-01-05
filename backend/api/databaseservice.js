@@ -478,6 +478,7 @@ router.route('/getSelectListAll/:enterpriseID/:layoutID').get(function(req, res)
     });
 });
 
+
 router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res) {
     var enterpriseID = req.param('enterpriseID');
     var layoutID = req.param('layoutID');
@@ -702,25 +703,28 @@ router.route('/getSelecFindDataGrid').post(function(req, res) {
     var objectId = new ObjectID();
     var submit = req.body;
     console.log(submit)
-    for (let index = 0; index < submit.length; index++) {
-        var p_containerID = submit[index]["containerID"];
-        
-        var select = "";
-        select += "SELECT (cTab.nm_SystemName + '.' + cprop.nm_SystemName + ' AS ''' + cTab.nm_SystemName + '.' + cprop.nm_SystemName + '''') AS Col, ";
-        select += "(cTab.nm_SystemName) AS Tab ";
-        select += "FROM BaseObject bctr ";
-        select += "INNER JOIN Control ctr ON ctr.ID=bctr.ID ";
-        select += "INNER JOIN BaseObject cprop ON cprop.ID=ctr.PropertyID ";
-        select += "INNER JOIN BaseObject cTab ON cprop.OwnerObjectID=cTab.ID ";
-        select += "WHERE bctr.OwnerObjectID='" + p_containerID + "'";
-            
+    
 
         sql.close()
         // connect to your database
-        sql.connect(configMetaObjecto, function (err) {    
+        sql.connect(configMetaObjecto, function (err) { 
             if (err) console.log(err);
             // create Request object
             var request = new sql.Request();
+
+            for (let index = 0; index < submit.length; index++) {
+                var p_containerID = submit[index]["containerID"];
+                
+                var select = "";
+                select += "SELECT (cTab.nm_SystemName + '.' + cprop.nm_SystemName + ' AS ''' + cTab.nm_SystemName + '.' + cprop.nm_SystemName + '''') AS Col, ";
+                select += "(cTab.nm_SystemName) AS Tab ";
+                select += "FROM BaseObject bctr ";
+                select += "INNER JOIN Control ctr ON ctr.ID=bctr.ID ";
+                select += "INNER JOIN BaseObject cprop ON cprop.ID=ctr.PropertyID ";
+                select += "INNER JOIN BaseObject cTab ON cprop.OwnerObjectID=cTab.ID ";
+                select += "WHERE bctr.OwnerObjectID='" + p_containerID + "'";
+                       
+            
             // query to the database and get the records
             request.query(select, function (err, recordset) {
                 if (err) console.log(err)
@@ -759,8 +763,8 @@ router.route('/getSelecFindDataGrid').post(function(req, res) {
                 }
                
             });
-        });
-    }
+        }
+    });    
     
 });
 
@@ -853,10 +857,14 @@ router.route('/getSelecFindFillGrid').post(function(req, res) {
     var objectId = new ObjectID();
     var submit = req.body;
     
+        sql.close()
+        // connect to your database
+        sql.connect(configMetaObjecto, function (err) {   
+            
     for (let index = 0; index < submit.length; index++) {
         var p_containerID = submit[index]["containerID"];
         var p_LayoutID  = submit[index]["LayoutID"];
-
+        
         var select = "";
         select += "SELECT (cTab.nm_SystemName + '.' + cprop.nm_SystemName + ' AS ''' + cTab.nm_SystemName + '.' + cprop.nm_SystemName + '''') AS Col, ";
         select += "(cTab.nm_SystemName) AS Tab, ";
@@ -870,64 +878,62 @@ router.route('/getSelecFindFillGrid').post(function(req, res) {
         select += "INNER JOIN BaseObject cprop ON cprop.ID=ctr.PropertyID ";
         select += "INNER JOIN BaseObject cTab ON cprop.OwnerObjectID=cTab.ID ";
         select += " WHERE bctr.OwnerObjectID='" + p_containerID + "'  AND ctr.sn_visibleGrid=1";
-            
-
-        sql.close()
-        // connect to your database
-        sql.connect(configMetaObjecto, function (err) {    
-            if (err) console.log(err);
-            // create Request object
-            var request = new sql.Request();
-            // query to the database and get the records
-            request.query(select, function (err, recordset) {
-                if (err) console.log(err)
-                //select no sql
-                var sqlfinal = "";
-                var join = "";
-                var listaTabelas = "";
-                var tabelaPrincipal = "";
-                var tabelaPrincipalLayout = "";
-                if(recordset.recordsets[0].length > 0){
-                    sqlfinal = "SELECT";
-                    for (let i = 0; i < recordset.recordsets[0].length; i++) {
-                        const element = recordset.recordsets[0][i];
-                        if(i == 0){
-                            if(element.ColFKFill2 != null && element.TabFK != null ){
-                                sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
-                            }else{
-                                sqlfinal += " " + element.Col;
-                            }
+             
+        console.log(p_containerID)
+        if (err) console.log(err);
+        // create Request object
+        var request = new sql.Request();
+        // query to the database and get the records
+        request.query(select, function (err, recordset) {
+            if (err) console.log(err)
+            //select no sql
+            var sqlfinal = "";
+            var join = "";
+            var listaTabelas = "";
+            var tabelaPrincipal = "";
+            var tabelaPrincipalLayout = "";
+            if(recordset.recordsets[0].length > 0){
+                sqlfinal = "SELECT";
+                for (let i = 0; i < recordset.recordsets[0].length; i++) {
+                    const element = recordset.recordsets[0][i];
+                    if(i == 0){
+                        if(element.ColFKFill2 != null && element.TabFK != null ){
+                            sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
                         }else{
-                            if(element.ColFKFill2 != null && element.TabFK != null){
-                                sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
-                            }else{
-                                sqlfinal += ", " + element.Col;
-                            }
+                            sqlfinal += " " + element.Col;
                         }
-
-                        tabelaPrincipalLayout = element.TabPricipal;
-                        tabelaPrincipal = element.Tab;
-                        if(listaTabelas.indexOf("#" + element.Tab + "#") == -1){
-                            listaTabelas += "#" + element.Tab + "#";
-                        
-                            var tempFK = "id_" + element.Tab;
-                            if(join == ""){ join = element.Tab }
-                            
+                    }else{
+                        if(element.ColFKFill2 != null && element.TabFK != null){
+                            sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
+                        }else{
+                            sqlfinal += ", " + element.Col;
                         }
                     }
-                    sqlfinal += " FROM " + join //recordset.recordsets[0][0].Tab
-                    sqlfinal += " WHERE " + tabelaPrincipal + ".id_" + tabelaPrincipalLayout + "='{{id}}'"
+
+                    tabelaPrincipalLayout = element.TabPricipal;
+                    tabelaPrincipal = element.Tab;
+                    if(listaTabelas.indexOf("#" + element.Tab + "#") == -1){
+                        listaTabelas += "#" + element.Tab + "#";
+                    
+                        var tempFK = "id_" + element.Tab;
+                        if(join == ""){ join = element.Tab }
+                        
+                    }
                 }
-                
-                submit[index]["findgriddata"] = sqlfinal;
-                if(submit.length == index + 1){
-                    // send records as a response
-                    res.send(submit);
-                }
+                sqlfinal += " FROM " + join //recordset.recordsets[0][0].Tab
+                sqlfinal += " WHERE " + tabelaPrincipal + ".id_" + tabelaPrincipalLayout + "='{{id}}'"
+            }
+            console.log(sqlfinal)
+            submit[index]["fillgrid"] = sqlfinal;
+            if(submit.length == index + 1){
+                // send records as a response
+                res.send(submit);
+            }
                
-            });
         });
-    }
+        }
+    });
+   
     
 });
 
@@ -941,21 +947,25 @@ router.route('/getDeleteData').post(function(req, res) {
     
     var submit = req.body;
     console.log(submit)
-    for (let index = 0; index < submit.length; index++) {
-        var p_containerID = submit[index]["containerID"];
-        
-        var select = "SELECT bbt.nm_SystemName AS Tab ";
-        select += "FROM Container ";
-        select += "INNER JOIN DataType dt ON Container.PrincipalDataTypeID=dt.ID ";
-        select += "INNER JOIN BaseObject bbt ON bbt.ID=dt.ID ";
-        select += "WHERE Container.ID = '" + p_containerID + "' ";
-        
+    
         sql.close()
         // connect to your database
-        sql.connect(configMetaObjecto, function (err) {    
-            if (err) console.log(err);
-            // create Request object
-            var request = new sql.Request();
+        sql.connect(configMetaObjecto, function (err) {   
+            
+            for (let index = 0; index < submit.length; index++) {
+                var p_containerID = submit[index]["containerID"];
+                
+                var select = "SELECT bbt.nm_SystemName AS Tab ";
+                select += "FROM Container ";
+                select += "INNER JOIN DataType dt ON Container.PrincipalDataTypeID=dt.ID ";
+                select += "INNER JOIN BaseObject bbt ON bbt.ID=dt.ID ";
+                select += "WHERE Container.ID = '" + p_containerID + "' ";
+                 
+                if (err) console.log(err);
+
+                // create Request object
+                var request = new sql.Request();
+
             // query to the database and get the records
             request.query(select, function (err, recordset) {
                 if (err) console.log(err)
@@ -963,7 +973,12 @@ router.route('/getDeleteData').post(function(req, res) {
                 var sqlfinal = "";
                 if(recordset.recordsets[0].length > 0){
                     const element = recordset.recordsets[0][index];
-                    sqlfinal = "DELETE FROM " + element.Tab + " WHERE id='{{id}}'";
+                    console.log(select)
+                    if (element) {
+                        if (element.Tab) {
+                            sqlfinal = "DELETE FROM " + element.Tab + " WHERE id='{{id}}'";
+                        }
+                    }
                 }
                 
                 submit[index]["deletedata"] = sqlfinal;
@@ -973,9 +988,8 @@ router.route('/getDeleteData').post(function(req, res) {
                 }
                
             });
-        });
-
-    };
+        };
+    });    
 });
 
 router.route('/saveCollectionContainers').post(function(req, res) {   
