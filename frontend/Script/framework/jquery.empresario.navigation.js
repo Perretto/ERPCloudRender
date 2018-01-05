@@ -868,6 +868,74 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
     .done(function( msg ) {
         //alert( "Data Saved: " + msg );
     });
+
+
+
+
+
+
+    //pega os containers da tela
+    var _finddata = "";
+    var urldata="http://localhost:3001/api/getListContainersLayout/" + enterpriseID + "/" + layoutID;
+    $.ajax({
+        method: "GET",
+        async: false,
+        url: urldata
+    })
+    .done(function( result ) {
+        _finddata = result;
+    });
+
+
+    var urldata="http://localhost:3001/api/getSelecFindFillGrid/";
+    $.ajax({
+        method: "POST",
+        async: false,
+        url: urldata,
+        data: _finddata
+    })
+    .done(function( result ) {
+        _finddata = result;
+    });
+
+
+    var urldata="http://localhost:3001/api/getSelecFindDataGrid/";
+    $.ajax({
+        method: "POST",
+        async: false,
+        url: urldata,
+        data: _finddata
+    })
+    .done(function( result ) {
+        _finddata = result;
+    });
+
+
+    var urldata="http://localhost:3001/api/getDeleteData/";
+    $.ajax({
+        method: "POST",
+        async: false,
+        url: urldata,
+        data: _finddata
+    })
+    .done(function( result ) {
+        _finddata = result;
+    });
+
+
+    var urldata="http://localhost:3001/api/saveCollectionContainers/";
+    $.ajax({
+        method: "POST",
+        async: false,
+        url: urldata,
+        data: _finddata
+    })
+    .done(function( msg ) {
+        //alert( "Data Saved: " + msg );
+    });
+
+
+
 }
 
 function sharpGridnav(containerID) {
