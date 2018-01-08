@@ -940,6 +940,32 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
 
 
 
+    //pega os controles da tela
+    var _finddata = "";
+    var urldata="http://localhost:3001/api/getSelecControls/" + enterpriseID + "/" + layoutID;
+    $.ajax({
+        method: "GET",
+        async: false,
+        url: urldata
+    })
+    .done(function( result ) {
+        _finddata = result;
+    });
+
+    _finddata = JSON.stringify(_finddata)
+    var urldata="http://localhost:3001/api/saveCollectionControls/";
+    $.ajax({
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        method: "POST",
+        async: false,
+        url: urldata,
+        data: _finddata
+    })
+    .done(function( msg ) {
+        //alert( "Data Saved: " + msg );
+    });
+
+    
 }
 
 function sharpGridnav(containerID) {

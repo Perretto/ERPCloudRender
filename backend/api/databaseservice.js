@@ -164,14 +164,13 @@ router.route('/save').post(function(req, res) {
         }
     }
 
-    console.log(insertOrUpdate)
         sql.close()
 
         sql.connect(config).then(function() {
                 request = new sql.Request();
                 request.query(insertOrUpdate).then(function(recordset) {
-                console.log('Recordset: ' + recordset);
-                console.log('Affected: ' + request.rowsAffected);
+                //console.log('Recordset: ' + recordset);
+                //console.log('Affected: ' + request.rowsAffected);
                 var retorno = '{ "status": "success", "id": "' + guid + '" }'
                 var obj = JSON.parse(retorno)
                 res.send(obj)
@@ -286,7 +285,6 @@ function createUpdate(submit, index){
             }            
         }else{            
             var prefixo = key[0] + key[1];
-            console.log(prefixo)
             switch (prefixo) {
                 case "id":
                     if (submit[index][key] == "" || submit[index][key] == undefined || submit[index][key] == "undefined") {
@@ -696,7 +694,6 @@ router.route('/getSelecFindDataGrid').post(function(req, res) {
     res.setHeader('Access-Control-Allow-Credentials', true); // If needed
 
     var submit = req.body;
-    console.log(submit)
     
         sql.close()
         // connect to your database
@@ -865,8 +862,7 @@ router.route('/getSelecFindFillGrid').post(function(req, res) {
         select += "INNER JOIN BaseObject cprop ON cprop.ID=ctr.PropertyID ";
         select += "INNER JOIN BaseObject cTab ON cprop.OwnerObjectID=cTab.ID ";
         select += " WHERE bctr.OwnerObjectID='" + p_containerID + "'  AND ctr.sn_visibleGrid=1";
-             
-        console.log(p_containerID)
+        
         if (err) console.log(err);
         // create Request object
         var request = new sql.Request();
@@ -910,7 +906,7 @@ router.route('/getSelecFindFillGrid').post(function(req, res) {
                 sqlfinal += " FROM " + join //recordset.recordsets[0][0].Tab
                 sqlfinal += " WHERE " + tabelaPrincipal + ".id_" + tabelaPrincipalLayout + "='{{id}}'"
             }
-            console.log(sqlfinal)
+            
             submit[index]["fillgrid"] = sqlfinal;
             if(submit.length == index + 1){
                 // send records as a response
@@ -931,7 +927,6 @@ router.route('/getDeleteData').post(function(req, res) {
     res.setHeader('Access-Control-Allow-Credentials', true); // If needed
     
     var submit = req.body;
-    console.log(submit)
     
     sql.close()
     // connect to your database
@@ -954,8 +949,7 @@ router.route('/getDeleteData').post(function(req, res) {
             // query to the database and get the records
             request.query(select, function (err, recordset) {
                 if (err) console.log(err)
-
-                console.log(recordset);
+                
                 //select no sql
                 var sqlfinal = "";
                 if(recordset.recordsets[0].length > 0){
@@ -1007,6 +1001,160 @@ router.route('/saveCollectionContainers').post(function(req, res) {
                     }
                     //create new
                     db.collection("containers").insert(submit[index], function(err, res) {
+                    if (err) throw err;
+                    db.close();
+                    });
+                }
+            });
+        });
+
+    };
+});
+
+router.route('/getSelecControls/:enterpriseID/:layoutID').get(function(req, res) {
+    var enterpriseID = req.param('enterpriseID');
+    var layoutID = req.param('layoutID');
+
+    var select = "SELECT c.ID, bTab.nm_SystemName AS Tabela, bPropF1.nm_SystemName As CampoFill1, bPropF2.nm_SystemName As CampoFill2, bPropF3.nm_SystemName As CampoFill3 ";
+    select += "FROM Control c ";
+    select += "    INNER JOIN BaseObject b ON c.id=b.ID  ";
+    select += "     LEFT JOIN Property propF1 ON propF1.id=c.Fill1PropertyID  ";
+    select += "     LEFT JOIN BaseObject bPropF1 ON bPropF1.id=propF1.id  ";
+    select += "    LEFT JOIN Property propF2 ON propF2.id=c.Fill2PropertyID  ";
+    select += "    LEFT JOIN BaseObject bPropF2 ON bPropF2.id=propF2.id  ";
+    select += "    LEFT JOIN Property propF3 ON propF3.id=c.Fill3PropertyID "; 
+    select += "    LEFT JOIN BaseObject bPropF3 ON bPropF3.id=propF3.id  ";
+    select += "    LEFT JOIN BaseObject bTab ON bPropF2.OwnerObjectID=bTab.ID ";
+    select += " WHERE (c.Fill1PropertyID != '00000000-0000-0000-0000-000000000000' AND c.Fill2PropertyID != '00000000-0000-0000-0000-000000000000')  ";
+    select += "  AND c.nm_ControlType='AUTOCOMPLETE' AND b.OwnerObjectID in (  ";
+    select += "    (SELECT Co1.ID FROM Layout L  ";
+    select += "        INNER JOIN Form f ON L.ID=f.LayoutID  ";
+    select += "        INNER JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID  ";
+    select += "         INNER JOIN Container Co1 ON Co1.ID=fxc.ContainerID  ";
+    select += "         INNER JOIN BaseObject bs ON bs.ID=Co1.ID  ";
+    select += "        LEFT JOIN FormXContainer fxc2 ON fxc2.BaseObjectID=fxc.ContainerID  ";
+    select += "        LEFT JOIN Container Co2 ON Co2.ID=fxc2.ContainerID  ";
+    select += "        LEFT JOIN FormXContainer fxc3 ON fxc3.BaseObjectID=fxc.ContainerID  ";
+    select += "        LEFT JOIN Container Co3 ON Co3.ID=fxc3.ContainerID  ";
+    select += "    WHERE L.ID='" + layoutID + "'  ";
+    select += "    GROUP BY Co1.ID)  ";
+    select += "    UNION  ";
+    select += "    (SELECT Co2.ID FROM Layout L  ";
+    select += "        INNER JOIN Form f ON L.ID=f.LayoutID  ";
+    select += "        INNER JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID  ";
+    select += "        INNER JOIN Container Co1 ON Co1.ID=fxc.ContainerID  ";
+    select += "        LEFT JOIN FormXContainer fxc2 ON fxc2.BaseObjectID=fxc.ContainerID  ";
+    select += "        LEFT JOIN Container Co2 ON Co2.ID=fxc2.ContainerID  ";
+    select += "        INNER JOIN BaseObject bs ON bs.ID=Co2.ID  ";
+    select += "        LEFT JOIN FormXContainer fxc3 ON fxc3.BaseObjectID=fxc.ContainerID  ";
+    select += "        LEFT JOIN Container Co3 ON Co3.ID=fxc3.ContainerID  ";
+    select += "    WHERE L.ID='" + layoutID + "'  ";
+    select += "    GROUP BY Co2.ID)  ";
+    select += "    UNION  ";
+    select += "    (SELECT Co3.ID FROM Layout L  ";
+    select += "        INNER JOIN Form f ON L.ID=f.LayoutID  ";
+    select += "        INNER JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID  ";
+    select += "        INNER JOIN Container Co1 ON Co1.ID=fxc.ContainerID  ";
+    select += "         LEFT JOIN FormXContainer fxc2 ON fxc2.BaseObjectID=fxc.ContainerID  ";
+    select += "        LEFT JOIN Container Co2 ON Co2.ID=fxc2.ContainerID  ";
+    select += "        LEFT JOIN FormXContainer fxc3 ON fxc3.BaseObjectID=fxc.ContainerID  ";
+    select += "        LEFT JOIN Container Co3 ON Co3.ID=fxc3.ContainerID  ";
+    select += "        INNER JOIN BaseObject bs ON bs.ID=Co3.ID  ";
+    select += "    WHERE L.ID='" + layoutID + "'  ";
+    select += "    GROUP BY Co3.ID)  ";
+    select += "    ) ";
+    
+    sql.close()
+    // connect to your database
+    sql.connect(configMetaObjecto, function (err) {    
+        if (err) console.log(err);
+        // create Request object
+        var request = new sql.Request();
+         // query to the database and get the records
+        request.query(select, function (err, recordset) {            
+            if (err) console.log(err)
+            //select no sql
+            var sqlfinal = "";
+            var objCtrlReturn = [];
+            if(recordset.recordsets[0].length > 0){
+                for (let i = 0; i < recordset.recordsets[0].length; i++) {
+
+                    const element = recordset.recordsets[0][i];
+                    sqlfinal = "SELECT TOP 20 ";
+                    sqlfinal += element.Tabela + "." + element.CampoFill1 + " as 'id', ";
+                    sqlfinal += element.Tabela + "." + element.CampoFill2 + " as 'label' ";
+
+                    sqlfinal += " FROM " + element.Tabela;
+                    
+                    var where = "";
+                    if(element.Tabela.toLowerCase() == "entidade"){
+                        switch (layoutID) {
+                            case "d82d11c8-ea16-47c7-be04-10423467f04e":
+                                where += " WHERE entidade.sn_tipoentidadecliente=1";
+                                break;
+                            case "589b6dae-4b0b-41f1-9516-3eaf235dff61":
+                                where += " WHERE entidade.sn_tipoentidadefornecedor=1";
+                                break;
+                            case "74cfff79-da65-4172-8f8c-e6ce92da5819":
+                                where += " WHERE entidade.sn_tipoentidadeprestador=1";
+                                break;
+                            case "26d46f90-5b1f-4e64-b2a8-b97090df03dc":
+                                where += " WHERE entidade.sn_tipoentidadevendedor=1";
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    
+                    if(where){
+                        where += " AND " + element.Tabela + "." + element.CampoFill2 + " LIKE '{{id}}%' ";
+                    }else{
+                        where += " WHERE " + element.Tabela + "." + element.CampoFill2 + " LIKE '{{id}}%' ";                        
+                    }
+
+                    var orderby = " ORDER BY " + element.Tabela + "." + element.CampoFill2;
+                    
+                    var objCtrl = {};
+                    objCtrl["controlID"] = element.ID;
+                    objCtrl["autocompleteChange"] = sqlfinal + where + orderby;
+                    objCtrlReturn.push(objCtrl);
+                }
+            }
+            // send records as a response
+            res.send(objCtrlReturn)
+        });
+    });
+});
+
+router.route('/saveCollectionControls').post(function(req, res) {   
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype'); // If needed
+    res.setHeader('Access-Control-Allow-Credentials', true); // If needed
+    
+    var submit = req.body;
+
+    for (let index = 0; index < submit.length; index++) {
+        var p_controlID = submit[index]["controlID"];
+        
+        var MongoClient = require('mongodb').MongoClient;
+        var url = "mongodb://localhost:27017/erpcloud";
+        
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            db.collection("controls").find({"controlID": p_controlID, _id: 0}).toArray(function(err, result) {
+                if (err) throw err;
+
+                if (result) {
+                    if (result.length > 0) {
+                        //remove old
+                        db.collection("controls").remove({"controlID": p_controlID}, function(err, res) {
+                        if (err) throw err;
+                        db.close();
+                        });
+                    }
+                    //create new
+                    db.collection("controls").insert(submit[index], function(err, res) {
                     if (err) throw err;
                     db.close();
                     });
