@@ -375,7 +375,7 @@ router.route('/saveHtml').post(function(req, res) {
     var p_finddata = submit["finddata"];
     
     var myobj = {
-        "_id": objectId,
+        //"_id": objectId,
         "layoutID": p_layoutID,
         "html": p_html, 
         "tabgenid": p_tabgenid, 
@@ -820,7 +820,7 @@ router.route('/getListContainersLayout/:enterpriseID/:layoutID').get(function(re
                     const ObjectID = require('mongodb').ObjectID
                     var objectId = new ObjectID();
                     var objCo = {};
-                    objCo["_id"] = objectId;
+                   // objCo["_id"] = objectId;
                     objCo["containerID"] = element.ID;
                     objCo["findgriddata"] = "";
                     objCo["deletedata"] = "";
