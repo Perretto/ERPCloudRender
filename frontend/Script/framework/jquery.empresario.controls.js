@@ -73,7 +73,7 @@
 
         var containerValid = true;
 
-        if (containerSelected.systemName != "CoCadastroCliente" && containerSelected.systemName != "CoCadastroForncedor" && containerSelected.systemName != "CoEntidadePrestador" && containerSelected.systemName != "CoCadastroVendedor") {
+        if (containerSelected.systemName != "CoCadastroCliente" && containerSelected.systemName != "CoCadastroForncedor" && containerSelected.systemName != "CoEntidadePrestador" && containerSelected.systemName != "CoCadastroVendedor" && containerSelected.systemName != "CoProdutosServicos") {
             containerValid = true;
             // metadados.viewTabs = true
         } else {
