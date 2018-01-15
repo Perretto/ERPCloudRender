@@ -860,8 +860,9 @@ router.route('/getSelecFindFillGrid').post(function(req, res) {
         select += " FROM BaseObject bctr ";
         select += "INNER JOIN Control ctr ON ctr.ID=bctr.ID ";
         select += "INNER JOIN BaseObject cprop ON cprop.ID=ctr.PropertyID ";
+        select += "INNER JOIN Property ON Property.ID=ctr.PropertyID ";
         select += "INNER JOIN BaseObject cTab ON cprop.OwnerObjectID=cTab.ID ";
-        select += " WHERE bctr.OwnerObjectID='" + p_containerID + "'  AND ctr.sn_visibleGrid=1";
+        select += " WHERE bctr.OwnerObjectID='" + p_containerID + "'  AND (ctr.sn_visibleGrid=1 OR Property.sn_primarykey=1)";
         
         if (err) console.log(err);
         // create Request object
