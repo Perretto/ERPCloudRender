@@ -187,21 +187,21 @@ function openLayout(button, tabGenID) {
 
     var formTelaIDNavigation = $(button);
 
-    if (formTelaIDNavigation) {
-        if (formTelaIDNavigation.length > 0) {
-            formID = $(formTelaIDNavigation[0]).attr("data-tabgenlayout");
+    //if (formTelaIDNavigation) {
+    //    if (formTelaIDNavigation.length > 0) {
+    //        formID = $(formTelaIDNavigation[0]).attr("data-tabgenlayout");
             
-            var onload = $("[tabgenid='" + formID + "']");
-            if (onload) {
-                if (onload.length > 0) {
-                    for (var i = 0; i < onload.length; i++) {
-                        var onloadName = $(onload[i]).attr("containeronload");
-                        eval(onloadName);
-                    }
-                }
-            }
-        }
-    }
+    //       var onload = $("[tabgenid='" + formID + "']");
+    //        if (onload) {
+    //            if (onload.length > 0) {
+    //                for (var i = 0; i < onload.length; i++) {
+    //                    var onloadName = $(onload[i]).attr("containeronload");
+    //                    eval(onloadName);
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
     
 
 }

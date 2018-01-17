@@ -277,14 +277,16 @@
 
         //CreateEvent
         containerCode = (containerSelected.onLoadName) ? "<script>" + containerSelected.onLoad + " </script>" : "";
-        $("#" + containerID).append(containerCode);
+        //$("#" + containerID).append(containerCode);
+        document.getElementById(containerID).innerHTML += containerCode
 
         containerCode = (containerSelected.onAfterSavingName) ? "<script> function " + containerSelected.onAfterSavingName + "  " + containerSelected.onAfterSaving + "  </script>" : "";
-        $("#" + containerID).append(containerCode);
+        //$("#" + containerID).append(containerCode);
+        document.getElementById(containerID).innerHTML += containerCode
 
         containerCode = (containerSelected.onBeforeSavingName) ? "<script> function " + containerSelected.onBeforeSavingName + "  " + containerSelected.onBeforeSaving + "  </script>" : "";
-        $("#" + containerID).append(containerCode);
-
+        //$("#" + containerID).append(containerCode);
+        document.getElementById(containerID).innerHTML += containerCode
 
     }
 
