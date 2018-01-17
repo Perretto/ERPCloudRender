@@ -1644,10 +1644,10 @@ function sharpGridSearch(containerID) {
         inputSearch += "<div class='form-group' style=\"height:35px;\">"
         inputSearch += "<div class='control-group col-md-3' style=\"padding: 0; position: absolute; right: 10px;\">"
 
-        inputSearch += "<input data-serializable='false' placeholder=\"Buscar...\" id=\"" + idSearchBox + "\" type=\"text\" class='form-control'/>"
+        inputSearch += "<input style='height:20px' data-serializable='false' placeholder=\"Buscar...\" id=\"" + idSearchBox + "\" type=\"text\" class='form-control'/>"
 
         inputSearch += "</div>"
-        inputSearch += "<label class='col-md' style=\"position:absolute;right: 15px; z-index: 1; top: 15px;\"><i class='fa fa-search'></i></label>"
+        inputSearch += "<label class='col-md' style=\"position:absolute;right: 15px; z-index: 1; top: 1%;\"><i class='fa fa-search'></i></label>"
         inputSearch += "</div>"
         inputSearch += "</div>"
 

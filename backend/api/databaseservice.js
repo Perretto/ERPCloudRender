@@ -16,7 +16,7 @@ var configMetaObjecto = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.
 router.route('/listall/:id').get(function(req, res) {
     var MongoClient = require('mongodb').MongoClient;
     var url = "mongodb://localhost:27017/erpcloud";
-    var id = "d82d11c8-ea16-47c7-be04-10423467f04e"; //req.param('id');
+    var id = req.param('id');
     var select = ""; //'select Id, nm_razaosocial, nr_codigo, dt_cadastro, nm_nomefantasia, sn_pessoafisica, nm_cpf, nm_cnpj FROM entidade'
 
     MongoClient.connect(url, function(err, db) {
@@ -415,7 +415,9 @@ router.route('/getSelectListAll/:enterpriseID/:layoutID').get(function(req, res)
     select += "    (select top 1 bt.nm_SystemName from BaseObject b ";
     select += "		inner join Property p on b.id=p.id inner join BaseObject bt on bt.id=p.DataTypeID ";
     //select += "		where b.id=bProp.id and bProp.nm_SystemName like 'id_%') AS TabFK ";
-    select += "		where b.id=bProp.id and bProp.nm_SystemName like 'id_%') AS TabFK ";
+    select += "		where b.id=bProp.id and bProp.nm_SystemName like 'id_%') AS TabFK, ";
+    select += "(select nm_SystemName FROM BaseObject p WHERE p.ID=c.Fill2PropertyID) as ColFKFill2, ";
+    select += "(bProp.nm_SystemName) as Coluna ";
     select += "FROM Control c ";
     select += "INNER JOIN BaseObject b ON c.id=b.ID ";
     select += "INNER JOIN Property prop ON prop.id=c.PropertyID ";
@@ -424,8 +426,8 @@ router.route('/getSelectListAll/:enterpriseID/:layoutID').get(function(req, res)
     select += "WHERE (c.sn_visiblegrid = 1 OR prop.sn_PrimaryKey=1) AND ";
     select += "b.OwnerObjectID = ( SELECT TOP 1 Co.ID AS IDContainerPrincipal FROM Layout L  ";
     select += "                    INNER JOIN Form f ON L.ID=f.LayoutID ";
-    select += "                    INNER JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID ";
-    select += "                    INNER JOIN Container Co ON Co.ID=fxc.ContainerID ";
+    select += "                    LEFT JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID ";
+    select += "                    LEFT JOIN Container Co ON Co.ID=fxc.ContainerID ";
     select += "                    WHERE L.ID='" + layoutID + "'  and bTab.ID=L.PrincipalDataTypeID ";
     select += "                    ORDER BY fxc.nr_DisplaySequence ) ";
     select += "ORDER BY c.nr_ScreenSequence ";
@@ -446,9 +448,17 @@ router.route('/getSelectListAll/:enterpriseID/:layoutID').get(function(req, res)
                 for (let i = 0; i < recordset.recordsets[0].length; i++) {
                     const element = recordset.recordsets[0][i];
                     if(i == 0){
-                        sqlfinal += " " + element.Col
+                        if(element.ColFKFill2 != null && element.TabFK != null){
+                            sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
+                        }else{
+                            sqlfinal += " " + element.Col;
+                        }
                     }else{
-                        sqlfinal += ", " + element.Col
+                        if(element.ColFKFill2 != null && element.TabFK != null){
+                            sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
+                        }else{
+                            sqlfinal += ", " + element.Col;
+                        }
                     }
                 }
                 sqlfinal += " FROM " + recordset.recordsets[0][0].Tab
