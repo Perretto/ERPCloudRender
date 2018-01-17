@@ -44,7 +44,7 @@ containersCount = forms.length
         //cria cada step
         for (var i = 0; i < parameters.metadados.container.length; i++) {
 			
-			if(parameters.metadados.container[i].systemName != "CoCadastroCliente" && parameters.metadados.container[i].systemName != "CoCadastroForncedor" && parameters.metadados.container[i].systemName != "CoEntidadePrestador" && parameters.metadados.container[i].systemName != "CoCadastroVendedor"  && parameters.metadados.container[i].systemName != "CoProdutosServicos" && parameters.metadados.container[i].systemName !=  "CoCompras"  && parameters.metadados.container[i].systemName != "CoCabecalhoVenda"){
+			if(parameters.metadados.container[i].systemName != "CoCadastroCliente" && parameters.metadados.container[i].systemName != "CoCadastroForncedor" && parameters.metadados.container[i].systemName != "CoEntidadePrestador" && parameters.metadados.container[i].systemName != "CoCadastroVendedor"  && parameters.metadados.container[i].systemName != "CoProdutosServicos" && parameters.metadados.container[i].systemName !=  "CoCompras"  && parameters.metadados.container[i].systemName != "CoCabecalhoVenda"  && parameters.metadados.container[i].systemName != "CoCabecalhoNF"){
 				iform += 1
 				guid = gerarGUID();
 				//variavel necessaria para marcar o step ativo (no caso, o primeiro)
@@ -202,15 +202,15 @@ containersCount = forms.length
                     //toogleColapseContainer($(formObject).find("#Gravar").parents(".innerTab"), true)
                 }
                 OpenFormSearch(recipient);
-                var onfinish = $("#" + layoutid);
-                if (onfinish) {
-                    if (onfinish.length > 0) {
-                        for (var i = 0; i < onfinish.length; i++) {
-                            var onloadName = $(onfinish[i]).attr("data-finish");
-                            eval(onloadName);
-                        }
-                    }
-                }
+                //var onfinish = $("#" + layoutid);
+                //if (onfinish) {
+                //    if (onfinish.length > 0) {
+                //        for (var i = 0; i < onfinish.length; i++) {
+                //            var onloadName = $(onfinish[i]).attr("data-finish");
+                //            eval(onloadName);
+                //        }
+                //    }
+                //}
                 var form = $("#" + layoutid).find("form");
                 for (var i = 0; i < form.length; i++) {
                     $(form[i]).formValidation('resetForm', true);
