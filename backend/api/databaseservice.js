@@ -627,9 +627,9 @@ router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res)
     select += "				GROUP BY Co3.ID) ";
     select += "			) ";
     select += "		) ";
-    select += "ORDER BY prop.nr_Sequence, bTab.nm_SystemName, bCol.nm_SystemName";
+    select += "ORDER BY bTab.nm_SystemName, bCol.nm_SystemName, prop.nr_Sequence";
     
-    
+
     sql.close()
     // connect to your database
     sql.connect(configMetaObjecto, function (err) {    
@@ -653,12 +653,20 @@ router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res)
                             sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
                         }else{
                             sqlfinal += " " + element.Col;
+
+                            if(element.ColFKFill2 != null && element.TabFK != null){
+                                sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "_FK'";
+                            }
                         }
                     }else{
                         if(element.ColFKFill2 != null && element.TabFK != null && (element.Template == "MASTERDETAIL" || element.Template == "GRID")){
                             sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
                         }else{
                             sqlfinal += ", " + element.Col;
+
+                            if(element.ColFKFill2 != null && element.TabFK != null){
+                                sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "_FK'";
+                            }
                         }
                     }
 
@@ -697,6 +705,9 @@ router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res)
     });
 });
 
+
+
+
 router.route('/getSelecFindDataGrid').post(function(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
@@ -717,13 +728,17 @@ router.route('/getSelecFindDataGrid').post(function(req, res) {
                 
                 var select = "";
                 select += "SELECT (cTab.nm_SystemName + '.' + cprop.nm_SystemName + ' AS ''' + cTab.nm_SystemName + '.' + cprop.nm_SystemName + '''') AS Col, ";
-                select += "(cTab.nm_SystemName) AS Tab ";
-                select += "FROM BaseObject bctr ";
+                select += "(cTab.nm_SystemName) AS Tab, ";
+                select += "(cprop.nm_SystemName) AS Coluna,";
+                select += "(SELECT nm_SystemName FROM BaseObject bPFK WHERE bPFK.ID=ctr.Fill2PropertyID ) AS ColFKFill2,";
+                select += "(SELECT dtFK.nm_SystemName FROM BaseObject bPFK INNER JOIN BaseObject dtFK ON bPFK.OwnerObjectID=dtFK.ID WHERE bPFK.ID=ctr.Fill2PropertyID) AS TabFK";
+        
+                select += " FROM BaseObject bctr ";
                 select += "INNER JOIN Control ctr ON ctr.ID=bctr.ID ";
                 select += "INNER JOIN BaseObject cprop ON cprop.ID=ctr.PropertyID ";
                 select += "INNER JOIN BaseObject cTab ON cprop.OwnerObjectID=cTab.ID ";
                 select += "WHERE bctr.OwnerObjectID='" + p_containerID + "'";
-                       
+                 console.log(select)      
             
             // query to the database and get the records
             request.query(select, function (err, recordset) {
@@ -739,9 +754,16 @@ router.route('/getSelecFindDataGrid').post(function(req, res) {
                         const element = recordset.recordsets[0][i];
                         if(i == 0){
                                 sqlfinal += " " + element.Col;
+                               
                         }else{
-                                sqlfinal += ", " + element.Col;                        
+                                sqlfinal += ", " + element.Col; 
+                                                     
                         }
+                        
+                        if(element.ColFKFill2 != null && element.TabFK != null){
+                            sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "_FK'";
+                        } 
+                        
 
                         tabelaPrincipal = element.Tab;
                         if(listaTabelas.indexOf("#" + element.Tab + "#") == -1){
