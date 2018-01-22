@@ -49,7 +49,7 @@
 }
 
 
-
+var arrayTemplate = [];
 
 function CreateAba(nameLayout, layoutID, titleMenu, dados, navigation, containerType, forcingTemplate, layoutType, callInstance, tabGenID, callbackSucess) {
     //html dos controles
@@ -62,7 +62,7 @@ function CreateAba(nameLayout, layoutID, titleMenu, dados, navigation, container
     var titleAboveControl;
     var formID = "";
     var modal = false;
-
+    
     var EnterpriseName = returnCookie("EnterpriseName");
 
     //var random = Math.random().toString().replace(".", "");
@@ -214,6 +214,7 @@ function fillTab(resultadoParametroExterno, formID, layoutID, tabGenID, forcingT
 
         titleAboveControl = resultadoParametroExterno[0].titleAboveControl;
 
+        arrayTemplate.push(nomeTemplate);
 
         if (nomeTemplate == "NAVIGATION") {
             //$("a[href=#" + tabGenID + "]").prepend("");
@@ -301,9 +302,9 @@ function fillTab(resultadoParametroExterno, formID, layoutID, tabGenID, forcingT
         }
     }
 
-    //if (nomeTemplate != "NAVIGATION" && layoutID != "MVC" && formID != "alertaModal") {
-    //    recordHTML(tabGenID, layoutID);
-    //}
+    if (arrayTemplate.indexOf("NAVIGATION") == -1) {
+        atualizaDadosHtmlMongoDB(tabGenID, layoutID);
+    }
 
 }
 
