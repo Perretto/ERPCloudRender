@@ -501,19 +501,38 @@ router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res)
     select += "	) As TabPrincipal, ";
     select += "	bTab.DerivedFromID, ";
     
-    select += "	(select top 1 bt.nm_SystemName from BaseObject b ";
-    select += "		inner join Property p on b.id=p.id inner join BaseObject bt on bt.id=p.DataTypeID ";
-    select += "	    where b.id=bCol.id and bCol.nm_SystemName like 'id_%'";
-    select += "	) AS TabFK, ";
+    //select += "	(select top 1 bt.nm_SystemName from BaseObject b ";
+    //select += "		inner join Property p on b.id=p.id inner join BaseObject bt on bt.id=p.DataTypeID ";
+    //select += "	    where b.id=bCol.id and bCol.nm_SystemName like 'id_%'";
+    //select += "	) AS TabFK, ";
+    select += "(select top 1 bb.nm_SystemName ";
+    select += "from form ";
+    select += "    inner join FormXContainer ON form.id=FormXContainer.BaseObjectID  ";
+    select += "    inner join Container ON Container.ID=FormXContainer.ContainerID  ";
+    select += "    inner join BaseObject ON BaseObject.ID=Container.PrincipalDataTypeID "; 
+    select += "    inner join Control CTR ON CTR.PropertyID=bCol.ID  ";
+    select += "    inner join BaseObject bCTR ON bCTR.ID=CTR.Fill1PropertyID "; 
+    select += "    inner join baseobject bb ON bb.id=bCTR.Ownerobjectid ";
+    select += "    where form.LayoutID='" + layoutID + "' and Container.PrincipalDataTypeID=bTab.ID and bCol.ID=CTR.PropertyID) AS TabFK,  ";
+      
+    //select += "    (select top 1 bCTR.nm_SystemName ";
+    //select += "      from form inner join FormXContainer ON form.id=FormXContainer.BaseObjectID ";
+    //select += "      inner join Container ON Container.ID=FormXContainer.ContainerID ";
+    //select += "      inner join BaseObject ON BaseObject.ID=Container.PrincipalDataTypeID ";
+    //select += "      inner join Control CTR ON CTR.PropertyID=bCol.ID ";
+    //select += "      inner join BaseObject bCTR ON bCTR.ID=CTR.Fill1PropertyID ";
+    //select += "      where form.LayoutID='" + layoutID + "' and Container.PrincipalDataTypeID=bTab.ID and bCol.ID=CTR.PropertyID) AS ColFKFill1, ";
     
-    select += "    (select top 1 bCTR.nm_SystemName ";
-    select += "      from form inner join FormXContainer ON form.id=FormXContainer.BaseObjectID ";
-    select += "      inner join Container ON Container.ID=FormXContainer.ContainerID ";
-    select += "      inner join BaseObject ON BaseObject.ID=Container.PrincipalDataTypeID ";
-    select += "      inner join Control CTR ON CTR.PropertyID=bCol.ID ";
-    select += "      inner join BaseObject bCTR ON bCTR.ID=CTR.Fill1PropertyID ";
-    select += "      where form.LayoutID='" + layoutID + "' and Container.PrincipalDataTypeID=bTab.ID and bCol.ID=CTR.PropertyID) AS ColFKFill1, ";
-    
+    select += "(SELECT top 1 bProp.nm_SystemName ";
+    select += "    FROM Control  ";
+    select += "    INNER JOIN BaseObject bctr ON bctr.ID=Control.ID ";
+    select += "    INNER JOIN BaseObject bProp ON bProp.ID=Control.Fill1PropertyID ";
+    select += "    inner join Container ON Container.ID=bctr.OwnerObjectID  ";
+    select += "    inner join FormXContainer ON Container.ID=FormXContainer.ContainerID ";
+    select += "    inner join Form ON Form.ID=FormXContainer.BaseObjectID ";    
+    select += "    WHERE Control.PropertyID = bCol.ID  ";
+    select += "    AND Form.LayoutID='" + layoutID + "') AS ColFKFill1 , ";
+
     select += "	(select top 1 bCTR.nm_SystemName ";
     select += "		from form inner join FormXContainer ON form.id=FormXContainer.BaseObjectID ";
     select += "     inner join Container ON Container.ID=FormXContainer.ContainerID ";
@@ -591,7 +610,7 @@ router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res)
     select += "	in ( ";
     select += "			SELECT c.PropertyID FROM Control c ";
     select += "			INNER JOIN BaseObject b ON c.id=b.ID ";
-    select += "			WHERE b.OwnerObjectID in ";
+    select += "			WHERE c.sn_virtual=0 AND b.OwnerObjectID in ";
     select += "			( ";
     select += "				(SELECT Co1.ID FROM Layout L ";
     select += "					INNER JOIN Form f ON L.ID=f.LayoutID ";
@@ -649,22 +668,22 @@ router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res)
                 for (let i = 0; i < recordset.recordsets[0].length; i++) {
                     const element = recordset.recordsets[0][i];
                     if(i == 0){
-                        if(element.ColFKFill2 != null && element.TabFK != null && (element.Template == "MASTERDETAIL" || element.Template == "GRID")){
+                        if(element.ColFKFill1 != null && element.TabFK != null && (element.Template == "MASTERDETAIL" || element.Template == "GRID")){
                             sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
                         }else{
                             sqlfinal += " " + element.Col;
 
-                            if(element.ColFKFill2 != null && element.TabFK != null){
+                            if(element.ColFKFill1 != null && element.TabFK != null){
                                 sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "_FK'";
                             }
                         }
                     }else{
-                        if(element.ColFKFill2 != null && element.TabFK != null && (element.Template == "MASTERDETAIL" || element.Template == "GRID")){
+                        if(element.ColFKFill1 != null && element.TabFK != null && (element.Template == "MASTERDETAIL" || element.Template == "GRID")){
                             sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
                         }else{
                             sqlfinal += ", " + element.Col;
 
-                            if(element.ColFKFill2 != null && element.TabFK != null){
+                            if(element.ColFKFill1 != null && element.TabFK != null){
                                 sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "_FK'";
                             }
                         }
@@ -737,8 +756,8 @@ router.route('/getSelecFindDataGrid').post(function(req, res) {
                 select += "INNER JOIN Control ctr ON ctr.ID=bctr.ID ";
                 select += "INNER JOIN BaseObject cprop ON cprop.ID=ctr.PropertyID ";
                 select += "INNER JOIN BaseObject cTab ON cprop.OwnerObjectID=cTab.ID ";
-                select += "WHERE bctr.OwnerObjectID='" + p_containerID + "'";
-                 console.log(select)      
+                select += "WHERE ctr.sn_virtual=0 AND bctr.OwnerObjectID='" + p_containerID + "'";
+                console.log(select)
             
             // query to the database and get the records
             request.query(select, function (err, recordset) {
