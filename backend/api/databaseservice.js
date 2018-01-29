@@ -366,7 +366,7 @@ router.route('/saveHtml').post(function(req, res) {
     var objectId = new ObjectID();
     var submit = req.body;
     //var p_ID = submit["_id"];
-    var p_layoutID = submit["layoutID"];
+    var p_layoutID = submit["layoutID"].toUpperCase();
     var p_html = submit["html"];
     var p_tabgenid = submit["tabgenid"];
     var p_listall = submit["listall"];
@@ -463,7 +463,7 @@ router.route('/getSelectListAll/:enterpriseID/:layoutID').get(function(req, res)
                 }
                 sqlfinal += " FROM " + recordset.recordsets[0][0].Tab
                 
-                switch (layoutID) {
+                switch (layoutID.toLowerCase()) {
                     case "d82d11c8-ea16-47c7-be04-10423467f04e":
                         sqlfinal += " WHERE entidade.sn_tipoentidadecliente=1" 
                         break;
@@ -869,11 +869,11 @@ router.route('/getListContainersLayout/:enterpriseID/:layoutID').get(function(re
                     var objectId = new ObjectID();
                     var objCo = {};
                    // objCo["_id"] = objectId;
-                    objCo["containerID"] = element.ID;
+                    objCo["containerID"] = element.ID.toUpperCase();
                     objCo["findgriddata"] = "";
                     objCo["deletedata"] = "";
                     objCo["fillgrid"] = "";
-                    objCo["LayoutID"] = layoutID;
+                    objCo["LayoutID"] = layoutID.toUpperCase();
                         
                     objCoReturn.push(objCo);
                 }
@@ -1033,34 +1033,37 @@ router.route('/saveCollectionContainers').post(function(req, res) {
     
     var submit = req.body;
 
-    for (let index = 0; index < submit.length; index++) {
-        var p_containerID = submit[index]["containerID"];
-        
-        var MongoClient = require('mongodb').MongoClient;
-        var url = "mongodb://localhost:27017/erpcloud";
-        
-        MongoClient.connect(url, function(err, db) {
+    var MongoClient = require('mongodb').MongoClient;
+    var url = "mongodb://localhost:27017/erpcloud";
+    var p_layoutID = submit[0]["LayoutID"];
+    
+    MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+        db.collection("containers").find({"LayoutID": p_layoutID}, { _id: false }).toArray(function(err, result) {
             if (err) throw err;
-            db.collection("containers").find({"containerID": p_containerID}, { _id: false }).toArray(function(err, result) {
-                if (err) throw err;
-                if (result) {
-                    if (result.length > 0) {
-                        //remove old
-                        db.collection("containers").remove({"containerID": p_containerID}, function(err, res) {
-                        if (err) throw err;
-                        db.close();
-                        });
-                    }
+            
+            if (result) {
+                if (result.length > 0) {
+                    //remove old
+                    db.collection("containers").remove({"LayoutID": p_layoutID}, function(err, res) {
+                    if (err) throw err;
+                    db.close();
+                    });
+                }
+            }
+            for (let index = 0; index < submit.length; index++) {
+                MongoClient.connect(url, function(err, db) {
+                    if (err) throw err;
                     //create new
                     db.collection("containers").insert(submit[index], function(err, res) {
                     if (err) throw err;
                     db.close();
                     });
-                }
-            });
+                });
+            };
         });
+    });
 
-    };
 });
 
 router.route('/getSelecControls/:enterpriseID/:layoutID').get(function(req, res) {
@@ -1167,7 +1170,8 @@ router.route('/getSelecControls/:enterpriseID/:layoutID').get(function(req, res)
                     var orderby = " ORDER BY " + element.Tabela + "." + element.CampoFill2;
                     
                     var objCtrl = {};
-                    objCtrl["controlID"] = element.ID;
+                    objCtrl["controlID"] = element.ID.toUpperCase();
+                    objCtrl["layoutID"] = layoutID.toUpperCase();
                     objCtrl["autocompleteChange"] = sqlfinal + where + orderby;
                     objCtrlReturn.push(objCtrl);
                 }
@@ -1185,34 +1189,35 @@ router.route('/saveCollectionControls').post(function(req, res) {
     res.setHeader('Access-Control-Allow-Credentials', true); // If needed
     
     var submit = req.body;
-
-    for (let index = 0; index < submit.length; index++) {
-        var p_controlID = submit[index]["controlID"];
-        
-        var MongoClient = require('mongodb').MongoClient;
-        var url = "mongodb://localhost:27017/erpcloud";
-        
-        MongoClient.connect(url, function(err, db) {
+    var MongoClient = require('mongodb').MongoClient;
+    var url = "mongodb://localhost:27017/erpcloud";
+    var p_layoutID = submit[0]["layoutID"];
+    
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        db.collection("controls").find({"layoutID": p_layoutID, _id: 0}).toArray(function(err, result) {
             if (err) throw err;
-            db.collection("controls").find({"controlID": p_controlID, _id: 0}).toArray(function(err, result) {
-                if (err) throw err;
 
-                if (result) {
-                    if (result.length > 0) {
-                        //remove old
-                        db.collection("controls").remove({"controlID": p_controlID}, function(err, res) {
-                        if (err) throw err;
-                        db.close();
-                        });
-                    }
-                    //create new
-                    db.collection("controls").insert(submit[index], function(err, res) {
+            if (result) {
+                if (result.length > 0) {
+                    //remove old
+                    db.collection("controls").remove({"layoutID": p_layoutID}, function(err, res) {
                     if (err) throw err;
                     db.close();
                     });
                 }
-            });
+            }
+            for (let index = 0; index < submit.length; index++) {
+                MongoClient.connect(url, function(err, db) {
+                if (err) throw err;
+                        //create new
+                        db.collection("controls").insert(submit[index], function(err, res) {
+                        if (err) throw err;
+                        db.close();
+                        });
+                });
+            }
         });
-
-    };
+    });
+    
 });
