@@ -667,28 +667,39 @@ router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res)
                 sqlfinal = "SELECT";
                 for (let i = 0; i < recordset.recordsets[0].length; i++) {
                     const element = recordset.recordsets[0][i];
-                    if(i == 0){
-                        if(element.ColFKFill1 != null && element.TabFK != null && (element.Template == "MASTERDETAIL" || element.Template == "GRID")){
-                            sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
-                        }else{
-                            sqlfinal += " " + element.Col;
+                    if (element.ColFKFill1) {
 
-                            if(element.ColFKFill1 != null && element.TabFK != null){
-                                sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "_FK'";
+                        if(i == 0){                            
+                                if(element.ColFKFill1 != null && element.TabFK != null && (element.Template == "MASTERDETAIL" || element.Template == "GRID")){
+                                   
+                                    sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE " + element.ColFKFill1 + "=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
+                                }else{
+                                    sqlfinal += " " + element.Col;
+        
+                                    if(element.ColFKFill1 != null && element.TabFK != null){
+                                        sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE " + element.ColFKFill1 + "=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "_FK'";
+                                    }
+                                }     
+                        }else{
+
+                            if(element.ColFKFill1 != null && element.TabFK != null && (element.Template == "MASTERDETAIL" || element.Template == "GRID")){
+                                sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE " + element.ColFKFill1 + "=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
+                            }else{
+                                sqlfinal += ", " + element.Col;
+
+                                if(element.ColFKFill1 != null && element.TabFK != null){
+                                    sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE " + element.ColFKFill1 + "=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "_FK'";
+                                }
                             }
                         }
                     }else{
-                        if(element.ColFKFill1 != null && element.TabFK != null && (element.Template == "MASTERDETAIL" || element.Template == "GRID")){
-                            sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
+                        if(i == 0){ 
+                            sqlfinal += " " + element.Col;
                         }else{
                             sqlfinal += ", " + element.Col;
-
-                            if(element.ColFKFill1 != null && element.TabFK != null){
-                                sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE id=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "_FK'";
-                            }
                         }
+                        
                     }
-
                     tabelaPrincipal = element.TabPrincipal;
                     //evita duplicação de tabelas
                     if(listaTabelas.indexOf("#" + element.Tab + "#") == -1){
