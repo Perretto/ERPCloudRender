@@ -672,23 +672,23 @@ router.route('/getSelecFinddata/:enterpriseID/:layoutID').get(function(req, res)
                         if(i == 0){                            
                                 if(element.ColFKFill1 != null && element.TabFK != null && (element.Template == "MASTERDETAIL" || element.Template == "GRID")){
                                    
-                                    sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE " + element.ColFKFill1 + "=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
+                                    sqlfinal += " (SELECT TOP 1 " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE " + element.ColFKFill1 + "=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
                                 }else{
                                     sqlfinal += " " + element.Col;
         
                                     if(element.ColFKFill1 != null && element.TabFK != null){
-                                        sqlfinal += " (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE " + element.ColFKFill1 + "=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "_FK'";
+                                        sqlfinal += " (SELECT  TOP 1 " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE " + element.ColFKFill1 + "=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "_FK'";
                                     }
                                 }     
                         }else{
 
                             if(element.ColFKFill1 != null && element.TabFK != null && (element.Template == "MASTERDETAIL" || element.Template == "GRID")){
-                                sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE " + element.ColFKFill1 + "=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
+                                sqlfinal += ", (SELECT  TOP 1 " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE " + element.ColFKFill1 + "=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "'";
                             }else{
                                 sqlfinal += ", " + element.Col;
 
                                 if(element.ColFKFill1 != null && element.TabFK != null){
-                                    sqlfinal += ", (SELECT " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE " + element.ColFKFill1 + "=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "_FK'";
+                                    sqlfinal += ", (SELECT  TOP 1 " + element.ColFKFill2 + " FROM " + element.TabFK + " WHERE " + element.ColFKFill1 + "=" + element.Tab + "." + element.Coluna + ") AS '" + element.Tab + "." + element.Coluna + "_FK'";
                                 }
                             }
                         }
