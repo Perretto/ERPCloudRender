@@ -969,6 +969,9 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
 }
 
 function atualizaDadosHtmlMongoDB2(tabGenID, layoutID) {
+    var dataAtualAntes = new Date();
+    console.log(dataAtualAntes);
+
     var tabGenScreen = $("#table_" + tabGenID + "_btnnovo").attr("data-tabgenlayout");
     if(!tabGenScreen){
         tabGenScreen = tabGenID;
@@ -1016,18 +1019,24 @@ function atualizaDadosHtmlMongoDB2(tabGenID, layoutID) {
     });
 
     _finddata = JSON.stringify(_finddata)
-    var urldata="http://localhost:3001/api/saveCollectionControls/";
-    $.ajax({
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        method: "POST",
-        async: false,
-        url: urldata,
-        data: _finddata
-    })
-    .done(function( msg ) {
-        //alert( "Data Saved: " + msg );
-    });
 
+    if (_finddata != "[]") {
+        var urldata="http://localhost:3001/api/saveCollectionControls/";
+        $.ajax({
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            method: "POST",
+            async: false,
+            url: urldata,
+            data: _finddata
+        })
+        .done(function( msg ) {
+            //alert( "Data Saved: " + msg );
+        });
+    }
+    
+
+    var dataAtualDepois = new Date();
+    console.log(dataAtualDepois);
 }
 
 function sharpGridnav(containerID) {

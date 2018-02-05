@@ -497,7 +497,7 @@ router.route('/saveLayout').post(function(req, res) {
     
     var objectId = new ObjectID();
     var submit = req.body;
-    console.log(submit["tabgenid"])
+    
     getSelecFinddata(submit, function(submitFindData){        
         getSelectListAll(submitFindData, function(submitListAll){
             savehtml(submitListAll);        
@@ -537,7 +537,6 @@ function savehtml(submitIn){
     var url = "mongodb://localhost:27017/erpcloud";
     
     MongoClient.connect(url, function(err, db) {
-        console.log(p_layoutID);
         if (err) throw err;
         db.collection("layouts").find({"layoutID": p_layoutID}, { _id: false }).toArray(function(err, result) {
             if (err) throw err;
@@ -1174,7 +1173,7 @@ router.route('/getSelecFindDataGrid').post(function(req, res) {
                 select += "INNER JOIN BaseObject cprop ON cprop.ID=ctr.PropertyID ";
                 select += "INNER JOIN BaseObject cTab ON cprop.OwnerObjectID=cTab.ID ";
                 select += "WHERE ctr.sn_virtual=0 AND bctr.OwnerObjectID='" + p_containerID + "'";
-                console.log(select)
+               
             
             // query to the database and get the records
             request.query(select, function (err, recordset) {
@@ -1608,6 +1607,8 @@ router.route('/saveCollectionControls').post(function(req, res) {
     var submit = req.body;
     var MongoClient = require('mongodb').MongoClient;
     var url = "mongodb://localhost:27017/erpcloud";
+
+
     var p_layoutID = submit[0]["layoutID"];
     
     MongoClient.connect(url, function(err, db) {
@@ -1798,7 +1799,7 @@ function getSelecFindFillGrid(submit, callback){
 function getSelecFindDataGrid(submit, callback){
     
     sql.close()
-    console.log(submit);
+    
     // connect to your database
     sql.connect(configMetaObjecto, function (err) { 
         if (err) console.log(err);
@@ -1820,7 +1821,7 @@ function getSelecFindDataGrid(submit, callback){
             select += "INNER JOIN BaseObject cprop ON cprop.ID=ctr.PropertyID ";
             select += "INNER JOIN BaseObject cTab ON cprop.OwnerObjectID=cTab.ID ";
             select += "WHERE ctr.sn_virtual=0 AND bctr.OwnerObjectID='" + p_containerID + "'";
-            console.log(select)
+       
         
             // query to the database and get the records
             request.query(select, function (err, recordset) {
@@ -1863,7 +1864,6 @@ function getSelecFindDataGrid(submit, callback){
                 submit[index]["findgriddata"] = sqlfinal;
                 if(submit.length == index + 1){
                     // send records as a response
-                    console.log(submit);
                     callback(submit);
                 }
             
@@ -1957,9 +1957,7 @@ router.route('/saveContainers/:enterpriseID/:layoutID').get(function(req, res) {
     const ObjectID = require('mongodb').ObjectID
     
     var objectId = new ObjectID();
-    //var submit = req.body;
-    console.log(enterpriseID);
-    console.log(layoutID);
+
     getListContainersLayout(enterpriseID, layoutID, function(submitListContainers){               
         getSelecFindFillGrid(submitListContainers, function(submitFindFillGrid){
             getSelecFindDataGrid(submitFindFillGrid, function(submitFindDataGrid){
