@@ -421,7 +421,7 @@ function clickSearch(tabGenID, layoutName, layoutID, load, listartodos) {
         if (load == true) {
             $("#table_" + tabGenID + "_btnnovo").click();
         }
-        atualizaDadosHtmlMongoDB(tabGenID, LayoutID);
+        atualizaDadosHtmlMongoDB2(tabGenID, LayoutID);
     });
 
 
@@ -966,6 +966,68 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
     });
 
     
+}
+
+function atualizaDadosHtmlMongoDB2(tabGenID, layoutID) {
+    var tabGenScreen = $("#table_" + tabGenID + "_btnnovo").attr("data-tabgenlayout");
+    if(!tabGenScreen){
+        tabGenScreen = tabGenID;
+    }
+    //pega a tag form no html
+    var _html = $("#" + tabGenID).html();
+    var enterpriseID = getUrlVar("enterpriseID")
+
+    var _listall = "";
+    var _finddata = "";
+    //salva
+    $.ajax({
+        method: "POST",
+        url: "http://localhost:3001/api/saveLayout",
+        async: false,
+        data: { layoutID: layoutID, html: _html, tabgenid: tabGenScreen, listall: _listall, finddata: _finddata, enterpriseID: enterpriseID }
+    })
+    .done(function( msg ) {
+        //alert( "Data Saved: " + msg );
+    });
+
+
+
+    var urldata="http://localhost:3001/api/saveContainers/" + enterpriseID + "/" + layoutID;
+    $.ajax({
+        method: "GET",
+        async: false,
+        url: urldata
+    })
+    .done(function( result ) {
+        //_finddata = result;
+    });
+    
+    
+    //pega os controles da tela
+    var _finddata = "";
+    var urldata="http://localhost:3001/api/getSelecControls/" + enterpriseID + "/" + layoutID;
+    $.ajax({
+        method: "GET",
+        async: false,
+        url: urldata
+    })
+    .done(function( result ) {
+        _finddata = result;
+    });
+
+    _finddata = JSON.stringify(_finddata)
+    var urldata="http://localhost:3001/api/saveCollectionControls/";
+    $.ajax({
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        method: "POST",
+        async: false,
+        url: urldata,
+        data: _finddata
+    })
+    .done(function( msg ) {
+        //alert( "Data Saved: " + msg );
+    });
+
 }
 
 function sharpGridnav(containerID) {
