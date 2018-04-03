@@ -1470,6 +1470,8 @@ router.route('/saveCollectionContainers').post(function(req, res) {
             for (let index = 0; index < submit.length; index++) {
                 MongoClient.connect(url, function(err, db) {
                     if (err) throw err;
+
+                    console.log(submit[index])
                     //create new
                     db.collection("containers").insert(submit[index], function(err, res) {
                     if (err) throw err;
@@ -1608,7 +1610,9 @@ router.route('/saveCollectionControls').post(function(req, res) {
     var MongoClient = require('mongodb').MongoClient;
     var url = "mongodb://localhost:27017/erpcloud";
 
-
+if (submit) {
+    if (submit.length > 0) {
+    
     var p_layoutID = submit[0]["layoutID"];
     
     MongoClient.connect(url, function(err, db) {
@@ -1638,6 +1642,8 @@ router.route('/saveCollectionControls').post(function(req, res) {
         });
     });
     
+    }
+}
 });
 
 

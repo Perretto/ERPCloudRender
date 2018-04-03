@@ -44,8 +44,9 @@ containersCount = forms.length
         //cria cada step
         for (var i = 0; i < parameters.metadados.container.length; i++) {
 			
-			if(parameters.metadados.container[i].systemName != "CoCadastroCliente" && parameters.metadados.container[i].systemName != "CoCadastroForncedor" && parameters.metadados.container[i].systemName != "CoEntidadePrestador" && parameters.metadados.container[i].systemName != "CoCadastroVendedor"  && parameters.metadados.container[i].systemName != "CoProdutosServicos" && parameters.metadados.container[i].systemName !=  "CoCompras"  && parameters.metadados.container[i].systemName != "CoCabecalhoVenda"  && parameters.metadados.container[i].systemName != "CoCabecalhoNF"){
-				iform += 1
+			//if(parameters.metadados.container[i].systemName != "CoCadastroCliente" && parameters.metadados.container[i].systemName != "CoCadastroForncedor" && parameters.metadados.container[i].systemName != "CoEntidadePrestador" && parameters.metadados.container[i].systemName != "CoCadastroVendedor"  && parameters.metadados.container[i].systemName != "CoProdutosServicos" && parameters.metadados.container[i].systemName !=  "CoCompras"  && parameters.metadados.container[i].systemName != "CoCabecalhoVenda"  && parameters.metadados.container[i].systemName != "CoCabecalhoNF"){
+            if (i != 0) {                
+                iform += 1
 				guid = gerarGUID();
 				//variavel necessaria para marcar o step ativo (no caso, o primeiro)
 				isActive = (iform == 0) ? "current" : "";

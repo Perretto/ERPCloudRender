@@ -49,12 +49,12 @@ function CreateNavigation(paramenters) {
 
     //htmlControls = htmlControls + "<div class=\"col-md-12\" style=\"padding-left:0px;padding-right:0px\">"
     //htmlControls = htmlControls + "<div class=\"col-md-3 form-group\">"; //inicio sidebar
-    if (layoutID != "5282d58f-b6d0-4380-99c7-38ab315bccd1") {
+    //if (layoutID != "5282d58f-b6d0-4380-99c7-38ab315bccd1") {
         //htmlControls = htmlControls + "<a data-telaid='" + tabGenIDTela + "' id='table_" + tabGenID + "_btnnovo' onClick=\"editLayout(this, '" + layoutName + "', '" + layoutID + "', '" + title + "', '" + loadData + "', '', '', '" + tabGenIDTela + "');\"" + " class=\"btn btn-primary\" ><i class=\"fa fa-file-o\"></i> Novo </a>"
 
         htmlControls = htmlControls + "<a data-formid='" + layoutID + "' data-telaid='" + tabGenIDTela + "' id='table_" + tabGenID + "_btnnovo' onClick=\"openLayout(this,'" + tabGenID + "');\"" + " class=\"btn btn-primary disabled \" ><i class=\"fa fa-file-o\"></i> Novo </a>"
 
-    }
+    //}
     htmlControls = htmlControls + "</div>"
     htmlControls = htmlControls + "</div>"
     htmlControls = htmlControls + "<div class=\"pull-left search\">"

@@ -303,7 +303,7 @@ function fillTab(resultadoParametroExterno, formID, layoutID, tabGenID, forcingT
     }
 
     if (arrayTemplate.indexOf("NAVIGATION") == -1) {
-        atualizaDadosHtmlMongoDB(tabGenID, layoutID);
+        atualizaDadosHtmlMongoDB2(tabGenID, layoutID);
     }
 
 }
