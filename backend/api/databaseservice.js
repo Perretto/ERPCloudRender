@@ -1488,7 +1488,7 @@ router.route('/getSelecControls/:enterpriseID/:layoutID').get(function(req, res)
     var enterpriseID = req.param('enterpriseID');
     var layoutID = req.param('layoutID');
 
-    var select = "SELECT c.ID, bTab.nm_SystemName AS Tabela, bPropF1.nm_SystemName As CampoFill1, bPropF2.nm_SystemName As CampoFill2, bPropF3.nm_SystemName As CampoFill3 ";
+    var select = "SELECT c.ID, bTab.nm_SystemName AS Tabela, bPropF1.nm_SystemName As CampoFill1, bPropF2.nm_SystemName As CampoFill2, bPropF3.nm_SystemName As CampoFill3, c.nm_ControlType AS nm_ControlType ";
     select += "FROM Control c ";
     select += "    INNER JOIN BaseObject b ON c.id=b.ID  ";
     select += "     LEFT JOIN Property propF1 ON propF1.id=c.Fill1PropertyID  ";
@@ -1499,7 +1499,7 @@ router.route('/getSelecControls/:enterpriseID/:layoutID').get(function(req, res)
     select += "    LEFT JOIN BaseObject bPropF3 ON bPropF3.id=propF3.id  ";
     select += "    LEFT JOIN BaseObject bTab ON bPropF2.OwnerObjectID=bTab.ID ";
     select += " WHERE (c.Fill1PropertyID != '00000000-0000-0000-0000-000000000000' AND c.Fill2PropertyID != '00000000-0000-0000-0000-000000000000')  ";
-    select += "  AND c.nm_ControlType='AUTOCOMPLETE' AND b.OwnerObjectID in (  ";
+    select += "  AND (c.nm_ControlType='AUTOCOMPLETE' OR c.nm_ControlType='DROPDOWN' OR c.nm_ControlType='DROPDOWNDSG') AND b.OwnerObjectID in (  ";
     select += "    (SELECT Co1.ID FROM Layout L  ";
     select += "        INNER JOIN Form f ON L.ID=f.LayoutID  ";
     select += "        INNER JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID  ";
@@ -1553,7 +1553,13 @@ router.route('/getSelecControls/:enterpriseID/:layoutID').get(function(req, res)
                 for (let i = 0; i < recordset.recordsets[0].length; i++) {
 
                     const element = recordset.recordsets[0][i];
-                    sqlfinal = "SELECT TOP 20 ";
+                    
+                    if (element.nm_ControlType == "DROPDOWNDSG" || element.nm_ControlType == "DROPDOWN") {
+                        sqlfinal = "SELECT ";
+                    }else{
+                        sqlfinal = "SELECT TOP 20 ";
+                    }
+                    
                     sqlfinal += element.Tabela + "." + element.CampoFill1 + " as 'id', ";
                     sqlfinal += element.Tabela + "." + element.CampoFill2 + " as 'label' ";
 
@@ -1583,6 +1589,10 @@ router.route('/getSelecControls/:enterpriseID/:layoutID').get(function(req, res)
                         where += " AND " + element.Tabela + "." + element.CampoFill2 + " LIKE '{{id}}%' ";
                     }else{
                         where += " WHERE " + element.Tabela + "." + element.CampoFill2 + " LIKE '{{id}}%' ";                        
+                    }
+
+                    if (element.nm_ControlType == "DROPDOWNDSG" || element.nm_ControlType == "DROPDOWN") {
+                        where = "";
                     }
 
                     var orderby = " ORDER BY " + element.Tabela + "." + element.CampoFill2;
@@ -1629,9 +1639,18 @@ if (submit) {
                     });
                 }
             }
+
             for (let index = 0; index < submit.length; index++) {
                 MongoClient.connect(url, function(err, db) {
-                if (err) throw err;
+                
+                //console.log(submit[index]["controlID"]);
+                //remove old
+                db.collection("controls").remove({"controlID": submit[index]["controlID"]}, function(err, res) {
+                    //if (err) throw err;
+                    //db.close();
+                });
+                
+                //if (err) throw err;
                         //create new
                         db.collection("controls").insert(submit[index], function(err, res) {
                         if (err) throw err;
