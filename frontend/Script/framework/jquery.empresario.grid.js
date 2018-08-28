@@ -94,7 +94,7 @@ function createGrid(parameters) {
         }
 
 
-        retorno += "<th "
+        retorno += "<th data-controltype='" + controls[i].controlType + "' "
 
         if (controls[i].visibleGrid) {
             controlcount += 1;

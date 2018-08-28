@@ -1,0 +1,372 @@
+<html>
+<head>
+</head>
+<body>
+<script>
+	var systemName = []
+	var layouts = []
+
+	//FoodTown
+		
+	//systemName.push("papeis") 
+	//layouts.push("FB72889C-E2C1-4D17-86FF-1C04A0136D18")
+
+	//systemName.push("cadastrodeusuarios") 
+    //layouts.push("DEA2281A-27A8-4970-BA45-8B3E23463767")
+    
+	//systemName.push("permissoesdosusuarios") 
+	//layouts.push("ACB9EFD2-AC81-4F89-B217-9F541518E172")
+
+	//systemName.push("grupo_usuario") 
+	//layouts.push("144A6A8F-D090-4F05-84C7-80020FE60EFB")
+
+	//systemName.push("Feriado") 
+	//layouts.push("04BF6A0D-2E2A-4C6B-8FBC-4A3483C0E5A2")
+
+	//systemName.push("ly_SimplesNacional") 
+	//layouts.push("69851ED9-00AB-4ADD-9EFD-AE9CE00E5DF3")
+
+	//systemName.push("LyConfiguracaoNCM") 
+	//layouts.push("A087E9E6-CE68-46F1-9DCF-DB8C35C36A7D")
+
+	//systemName.push("tabela_operacoes") 
+	//layouts.push("DD8A040A-B0D6-4DA0-AE26-15D63497F3E8")
+
+	//systemName.push("lay_configuracao_email") 
+	//layouts.push("2A90B9B8-06EF-4E68-B11B-C05C3A84A9EC")
+
+	//systemName.push("configuracoesNFe") 
+	//layouts.push("738BCDBA-7635-4601-9FF3-57B8242F033A")
+
+	//systemName.push("ConfiguracoesNFservico") 
+	//layouts.push("5ADBAD66-A4F7-4EAA-A6BB-0E776106E2C6")
+
+	//systemName.push("formasdeparcelamento") 
+	//layouts.push("F5D24124-1E62-4496-88CC-20F299AB701A")
+
+	//systemName.push("aprovadores") 
+	//layouts.push("94EE89AB-9A65-4D81-B230-24A9521ECA85")
+
+	//systemName.push("controle_alcada") 
+	//layouts.push("086B08B4-C803-4DA5-BC13-2A8168D481E5")
+
+	//systemName.push("lyRiscoCredito") 
+	//layouts.push("62319F65-3192-412E-8D68-89DB797E6363")
+
+	//systemName.push("configuradorSistema") 
+	//layouts.push("6C78439B-E6BF-494A-B5A8-8CBDD2C8EC7D")
+
+	//systemName.push("passosCompra") 
+	//layouts.push("D70D62B2-44C3-47FF-8456-8B06C81DAF0D")
+
+	//systemName.push("LyPassosEntrega") 
+	//layouts.push("A9E09EA0-4F6B-4474-81BE-F2C67163625B")
+
+	//systemName.push("Departamento") 
+	//layouts.push("7F9555BC-DA5F-475A-9317-A53039CB179A")
+
+	//systemName.push("lyClasseRisco") 
+	//layouts.push("D5B54D0D-5CBB-49F3-83DA-D88A4C298C78")
+
+	//systemName.push("layCotacao2") 
+	//layouts.push("AD043C53-2AD8-419D-B6C2-1EAB7EEEC932")
+
+	//systemName.push("TiposTitulo") 
+	//layouts.push("5C3F5709-62E2-4134-85EA-92953E441299")
+
+	//systemName.push("unidadesdemedida") 
+	//layouts.push("FC4F9942-31CB-4663-B41C-40B9FFB01D2E")
+
+	//systemName.push("avaliacoes") 
+	//layouts.push("36F9F0DA-76DB-49E9-9BE1-5A3EE68A41B1")
+
+	//systemName.push("motivobloqueio") 
+	//layouts.push("CBFC0A8B-7AB3-4606-A89A-46F0A2967558")
+
+	//systemName.push("TipoEmpresa") 
+	//layouts.push("1085F2EF-D4AF-4706-BB30-CB360155A997")
+
+	//systemName.push("motivoinativacao") 
+	//layouts.push("413413EF-1A14-41C1-9F66-C86388166E99")
+
+	//systemName.push("motivoinativacaoprodutos") 
+	//layouts.push("C4F16257-2B14-4F2B-81CB-67E0701A8313")
+
+	//systemName.push("regiao") 
+	//layouts.push("582CC113-7F0E-4600-B470-4B5444504CFB")
+
+	//systemName.push("tipoendereco") 
+	//layouts.push("2859D6F0-4236-4340-847C-6E415CF29B69")
+
+	//systemName.push("incentivodecomissoes") 
+	//layouts.push("3228F36B-4359-4649-A520-50254B599A0E")
+
+	//systemName.push("descontomaximo") 
+	//layouts.push("63395A91-7431-4949-BAFC-32F880A2F853")
+
+	//systemName.push("ncm") 
+	//layouts.push("B17D534E-8835-46F4-87B3-175402184AD5")
+
+	//systemName.push("tipoatendimento") 
+	//layouts.push("14F3455A-2247-4EEA-8014-F5F6455FE894")
+
+	//systemName.push("classificacaofiscal") 
+	//layouts.push("3ED64560-0C79-482C-97A4-4E6694AB4951")
+
+	//systemName.push("moedas") 
+	//layouts.push("C612531C-DC15-4342-8874-AFB67B1C796C")
+
+	//systemName.push("ocupacao") 
+	//layouts.push("C71344F2-3334-4AE1-9255-27EFEF71F5A1")
+
+	//systemName.push("setor") 
+	//layouts.push("975A62FA-52FA-4DE3-9C75-8A08106B66EE")
+
+	//systemName.push("ly_uso_categoria_financeira") 
+	//layouts.push("B782922C-17ED-4A1B-8EF9-4DEB60E475B6")
+
+	//systemName.push("cnae") 
+	//layouts.push("593A1AE7-1155-491B-B990-935A8CD6DE9E")
+
+	//systemName.push("uf") 
+	//layouts.push("91582984-0DBD-4055-A19D-A8AD62FBFE53")
+
+	//systemName.push("cidade") 
+	//layouts.push("9F88AB16-97B1-489D-A994-21768F1B74CD")
+
+	//systemName.push("ly_plano_contas_rateio") 
+	//layouts.push("E78D4958-B58B-4DA5-B95B-098E1D699512")
+
+	//systemName.push("cadastrodeprestadores") 
+	//layouts.push("74CFFF79-DA65-4172-8F8C-E6CE92DA5819")
+
+	//systemName.push("cadastrodeclientes") 
+	//layouts.push("D82D11C8-EA16-47C7-BE04-10423467F04E")
+
+	//systemName.push("cadastrodefornecedores") 
+	//layouts.push("589B6DAE-4B0B-41F1-9516-3EAF235DFF61")
+
+	//systemName.push("ly_ConfiguracaoRateio") 
+	//layouts.push("2451BBB2-8802-4273-A488-C0596283574A")
+
+	//systemName.push("cadastrodearmazens") 
+	//layouts.push("E6DA8FE0-E235-4CF9-8BEF-63F7AE6038E9")
+
+	//systemName.push("dsg_impostos") 
+	//layouts.push("00B8328F-E21A-4BCA-A84D-DB5EDE5B98D2")
+
+	//systemName.push("cadastrodeprodutoseservicos") 
+	//layouts.push("D0318F5C-A014-429C-895A-A5E542862465")
+
+	//systemName.push("Cadastro Banco") 
+	//layouts.push("A4ADFC24-CAD2-4BCF-BA95-1987E3350185")
+
+	//systemName.push("lyCaixinha") 
+	//layouts.push("E9F540D1-3C2A-45F3-95DE-CF5E8A70ED41")
+
+	//systemName.push("CategoriasFinanceiras") 
+	//layouts.push("EAD39A59-BAC3-4EF8-808B-F79383700D85")
+
+	//systemName.push("ly_tipo_categoria_financeira") 
+	//layouts.push("C4684484-CF50-412C-B5A7-85E5AD86D003")
+
+	//systemName.push("listadeprecos") 
+	//layouts.push("7BE10F8C-0109-46FA-869D-C0054E4F066B")
+
+	//systemName.push("pedidodevendas") 
+	//layouts.push("EE5B8618-B239-49CA-86A9-6975134C8713")
+
+	//systemName.push("venda_lista") 
+	//layouts.push("FFFF2880-AEDB-412A-A45E-8485B9B3A5FD")
+
+	//systemName.push("lyImportarXML") 
+	//layouts.push("C6BD6C44-6546-4700-954D-E22C61A20979")
+
+	//systemName.push("requisicaodecompras") 
+	//layouts.push("1FBEE094-FDC9-49C4-A2DB-45855C6CBEC6")
+
+	//systemName.push("CotacaoEnvio") 
+	//layouts.push("5029331A-57AC-43D9-8F7A-65735EFF6740")
+
+	//systemName.push("CotacaoRetorno") 
+	//layouts.push("A6B2FA6B-3262-4693-B295-3C821AFA0AEC")
+
+	//systemName.push("pedidodecompras") 
+	//layouts.push("CACD9A15-C86D-4014-9A38-8ED7579905BB")
+
+	//systemName.push("compra_lista") 
+	//layouts.push("8568AF04-4BF9-4E00-8A19-EDD28AF34326")
+
+	//systemName.push("notafiscal") 
+	//layouts.push("07CA6DB2-A587-4A59-AA82-95F1795BDF68")
+
+	//systemName.push("LyMovimentacaoManual") 
+	//layouts.push("53426ABC-DA57-439B-ABB1-38033E99149F")
+
+	//systemName.push("estoque") 
+	//layouts.push("0E243B81-3C5E-4686-AB81-5E42BAAAB488")
+
+	//systemName.push("LyConsultaSaldoPorArmazem") 
+	//layouts.push("D4872027-4768-4683-9F50-0F491BC26374")
+
+	//systemName.push("Ly_autoriza_tituloPag") 
+	//layouts.push("282D5F77-CC24-4653-8BF4-3D9BB881ADAC")
+
+	//systemName.push("LayMovimentacaoCaixinha") 
+	//layouts.push("288F1863-9A1B-4423-89F3-72AF95971331")
+
+	//systemName.push("ly_faixa_peso_frete") 
+	//layouts.push("4EEFF003-4AD5-43E2-AD63-EDB41F910EAF")
+
+	//systemName.push("ly_parametro_frete") 
+	//layouts.push("39F88476-8DE4-483C-A002-FF83A83BE811")
+
+	//systemName.push("lytManutencaoPrevisaoFinanceira") 
+	//layouts.push("4963A574-0EF3-433E-98EC-DE05F421614D")
+
+	//systemName.push("sac") 
+	//layouts.push("A738569A-DCD0-4A8B-A530-A5F7AFDAED49")
+
+	//systemName.push("ordemProducao2") 
+	//layouts.push("75D692D4-650F-4FB0-BE20-BD452A1AA1BB")
+
+	//systemName.push("controledecheques") 
+	//layouts.push("DAC4F9F1-2145-4A1D-B1CF-A1644B6B6F54")
+
+	//systemName.push("centrodecustos") 
+	//layouts.push("045D3881-D774-47A1-932D-A4223C5FD924")
+
+	//systemName.push("centrodecustos") 
+	//layouts.push("045D3881-D774-47A1-932D-A4223C5FD924")
+
+	//systemName.push("layNFe") 
+	//layouts.push("7DF84E2B-376C-4AF9-8D16-42AD021B7542")
+
+	//systemName.push("Cargo") 
+	//layouts.push("3C5281A2-2791-4247-B4FC-4467EC5AEB56")
+
+	//systemName.push("ordemdeproducao") 
+	//layouts.push("168DA5C0-2E61-46C5-9D10-5FC168C50456")
+
+	//systemName.push("ordemdeproducao") 
+	//layouts.push("168DA5C0-2E61-46C5-9D10-5FC168C50456")
+
+	//systemName.push("ly_ControleRateio") 
+	//layouts.push("92EAFC56-FFCB-435F-A464-8E5A50F9F29F")
+
+	//systemName.push("caixainterno") 
+	//layouts.push("A66483C4-B3BA-4B2C-A96A-9934FEAD7F3B")
+
+	//systemName.push("planodecontas") 
+	//layouts.push("69278AEB-4AD5-4399-8CDE-3332AA5C2350")
+
+	//systemName.push("planodecontas") 
+	//layouts.push("69278AEB-4AD5-4399-8CDE-3332AA5C2350")
+
+	//systemName.push("expedicao") 
+	//layouts.push("DFD85E30-8F8E-4038-BED4-2449551F5FA8")
+
+	//systemName.push("custodeproducao") 
+	//layouts.push("F5A4798A-7A38-464E-8572-02F8C4291543")
+
+	//systemName.push("Captação") 
+	//layouts.push("375F7528-5885-4013-BB9E-03518B069207")
+
+	//systemName.push("LyEntregas") 
+	//layouts.push("2466BF7A-B139-42B9-B73D-0B32A74643C4")
+
+	//systemName.push("bancos") 
+	//layouts.push("B38033B3-23E4-4708-AEBE-11B81F59C5FA")
+
+	//systemName.push("LayoutAgrupamentoCheque") 
+	//layouts.push("DA7B2EBE-A19D-41B4-A662-31C31EA5B4EA")
+
+	//systemName.push("LyToleranciaRecebimento") 
+	//layouts.push("83BE829D-7B20-42E4-B28C-22DC284ED487")
+
+	//systemName.push("LayoutBaixaTitulosContasPagar") 
+	//layouts.push("E67C4C2E-7D3D-4403-B643-1F10D44B17C2")
+
+	//systemName.push("Faixa de Atingimento Meta") 
+	//layouts.push("9B8DFB0C-EC39-4097-B891-5A4D34BA8890")
+
+	//systemName.push("ncontasreceber") 
+	//layouts.push("2F115BA4-68F4-4E4C-9F53-4201F388A021")
+
+	//systemName.push("LyExpedicaoEntrega") 
+	//layouts.push("4F7E921E-25EA-48E7-BEBC-9B94AD1D045E")
+
+	//systemName.push("parametro_criticidade") 
+	//layouts.push("F09EF430-6624-4CF8-8F3A-9BCBE1BACC7E")
+
+	//systemName.push("Inventarios") 
+	//layouts.push("D356088F-0F82-40EE-8C9F-9C903B51B550")
+
+	//systemName.push("cadastrodeusuarios") 
+	//layouts.push("DEA2281A-27A8-4970-BA45-8B3E23463767")
+
+	//systemName.push("grupodevendedores") 
+	//layouts.push("A4AAAE5C-B4E0-4BE5-A7BA-927B9621C8B0")
+
+	//systemName.push("grupo_usuario") 
+	//layouts.push("144A6A8F-D090-4F05-84C7-80020FE60EFB")
+
+	//systemName.push("fluxodecaixa") 
+	//layouts.push("A9C034C2-A8AF-4FDD-B431-74806CD6F89D")
+
+	//systemName.push("ly_tipo_movimentacao_financeira") 
+	//layouts.push("9EC72589-2AD8-461A-801A-79DEF2BB2E94")
+
+	//systemName.push("gerararquivocnab") 
+	//layouts.push("308F15E9-8B2D-4B30-BE3F-7DEEA93A1ACF")
+
+	//systemName.push("lyFormaLiberacao") 
+	//layouts.push("F07C0310-9347-4849-902C-7E0545A59224")
+
+	//systemName.push("cadastrodeempresas") 
+	//layouts.push("E1F2E1B3-F482-4173-B2D2-C08D2368661C")
+
+	//systemName.push("grupos") 
+	//layouts.push("EBF4455F-3D60-4DC8-895A-C3516555B840")
+
+	//systemName.push("lytBaixaTitulosReceber") 
+	//layouts.push("BD7C9D03-C5B9-48AD-8C1D-C9A990060CE9")
+
+	//systemName.push("permissoesdosusuarios") 
+	//layouts.push("ACB9EFD2-AC81-4F89-B217-9F541518E172")
+
+	//systemName.push("LayRetornoCnab") 
+	//layouts.push("F0887DAF-986D-4833-B759-96F7BD8599C8")
+
+	//systemName.push("cnab") 
+	//layouts.push("E81F051E-DF1B-4FFE-9F5E-BF655E171FF6")
+
+	//systemName.push("Faixas Desconto de Comissão") 
+	//layouts.push("584C9AAF-6901-475F-9632-E618265CB710")
+
+	//systemName.push("ly_formaEnvioCorreios") 
+	//layouts.push("6657369E-3582-4D80-A9EB-E6B503860458")
+
+	//systemName.push("ly_tipo_contrato") 
+	//layouts.push("503AE0E9-E8D7-47B2-A781-DDAD94BD3B59")
+
+	//systemName.push("LayoutContasPagar") 
+	//layouts.push("557F6153-8B63-464C-A7D9-ED5FA76A13A3")
+
+	//systemName.push("Metas Comissão") 
+	//layouts.push("0E9F8590-B1DD-4C67-BF08-F18075B39CF0")
+
+	//systemName.push("cadastrodevendedores") 
+	//layouts.push("26D46F90-5B1F-4E64-B2A8-B97090DF03DC")
+
+	//systemName.push("grupodevendedores") 
+	//layouts.push("A4AAAE5C-B4E0-4BE5-A7BA-927B9621C8B0")
+	var enterpriseID = "39b75b6a-655c-4463-985c-cdfef415ddcf";
+
+	for(var i=0; i<layouts.length; i++){
+		window.open("file:///D:/ERPCloudRender/frontend/index.html?enterpriseID=" + enterpriseID + "&systemName=" + systemName[i] + "&layoutID=" + layouts[i] + "&publish=false", "_blank")
+		//window.open("file:///D:/ERPCloudRender/frontend/index.html?enterpriseID=39B75B6A-655C-4463-985C-CDFEF415DDCF&systemName=" + systemName[i] + "&layoutID=" + layouts[i] + "&publish=false", "_blank")
+	}
+</script>
+</body>
+</html>

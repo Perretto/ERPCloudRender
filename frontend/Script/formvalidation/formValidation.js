@@ -1360,10 +1360,10 @@ if (typeof jQuery === 'undefined') {
                 if (this._isExcluded($field)) {
                     continue;
                 }
-
+                
                 var $parent = $field.closest(row),
                     $message = $field.data(ns + '.messages'),
-                    $allErrors = $message.find('.' + this.options.err.clazz.split(' ').join('.') + '[data-' + ns + '-validator][data-' + ns + '-for="' + field + '"]'),
+                    $allErrors = $message ? $message.find('.' + this.options.err.clazz.split(' ').join('.') + '[data-' + ns + '-validator][data-' + ns + '-for="' + field + '"]') : $message,
                     $errors = validatorName ? $allErrors.filter('[data-' + ns + '-validator="' + validatorName + '"]') : $allErrors,
                     $icon = $field.data(ns + '.icon'),
                     // Support backward

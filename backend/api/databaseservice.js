@@ -11,11 +11,19 @@ server.use('/api', router)
 // config for your database
 var config = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'eCloud-homologa'};
 var configMetaObjecto = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'intelecta10_homologa'};
+
+//var config = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'eCloud-foodtown'};
+//var configMetaObjecto = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'intelecta10_foodtown_up'};
+
+
+//var url = "mongodb://localhost:27017/foodtown";
+var base = "erpcloud"; // erpcloudfoodtown
+var url = "mongodb://localhost:27017/" + base;
 //var config = {user: 'sa', password: '1nt3l3ct@', server: '54.149.163.193',  database: 'eCloud-roadmap'};
 
 router.route('/listall/:id').get(function(req, res) {
     var MongoClient = require('mongodb').MongoClient;
-    var url = "mongodb://localhost:27017/erpcloud";
+    //var url = "mongodb://localhost:27017/erpcloud";
     var id = req.param('id');
     var select = ""; //'select Id, nm_razaosocial, nr_codigo, dt_cadastro, nm_nomefantasia, sn_pessoafisica, nm_cpf, nm_cnpj FROM entidade'
 
@@ -54,7 +62,6 @@ router.route('/listall/:id').get(function(req, res) {
 
 router.route('/findid/:id').get(function(req, res) {
     var MongoClient = require('mongodb').MongoClient;
-    var url = "mongodb://localhost:27017/erpcloud";
     var id = "d82d11c8-ea16-47c7-be04-10423467f04e"; //req.param('id');
     var select = ""; //'select Id, nm_razaosocial, nr_codigo, dt_cadastro, nm_nomefantasia, sn_pessoafisica, nm_cpf, nm_cnpj FROM entidade'
 
@@ -96,7 +103,6 @@ router.route('/findid/:id').get(function(req, res) {
 
 router.route('/editGridLine/:id/:filtro').get(function(req, res) {
     var MongoClient = require('mongodb').MongoClient;
-    var url = "mongodb://localhost:27017/erpcloud";
     var id = req.param('id');
     var filtro = req.param('filtro');
     var select = ""; //'select Id, nm_razaosocial, nr_codigo, dt_cadastro, nm_nomefantasia, sn_pessoafisica, nm_cpf, nm_cnpj FROM entidade'
@@ -381,7 +387,6 @@ router.route('/saveHtml').post(function(req, res) {
         "finddata": p_finddata};
 
     var MongoClient = require('mongodb').MongoClient;
-    var url = "mongodb://localhost:27017/erpcloud";
     
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
@@ -534,7 +539,6 @@ function savehtml(submitIn){
         "finddata": p_finddata};
 
     var MongoClient = require('mongodb').MongoClient;
-    var url = "mongodb://localhost:27017/erpcloud";
     
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
@@ -1450,7 +1454,6 @@ router.route('/saveCollectionContainers').post(function(req, res) {
     var submit = req.body;
 
     var MongoClient = require('mongodb').MongoClient;
-    var url = "mongodb://localhost:27017/erpcloud";
     var p_layoutID = submit[0]["LayoutID"];
     
     MongoClient.connect(url, function(err, db) {
@@ -1618,7 +1621,6 @@ router.route('/saveCollectionControls').post(function(req, res) {
     
     var submit = req.body;
     var MongoClient = require('mongodb').MongoClient;
-    var url = "mongodb://localhost:27017/erpcloud";
 
 if (submit) {
     if (submit.length > 0) {
@@ -1945,7 +1947,6 @@ function getDeleteData(submit, callback){
 
 function saveContainer(submit){
     var MongoClient = require('mongodb').MongoClient;
-    var url = "mongodb://localhost:27017/erpcloud";
     var p_layoutID = submit[0]["LayoutID"];
     
     MongoClient.connect(url, function(err, db) {

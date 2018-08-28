@@ -9,7 +9,7 @@ var config =
      server: '52.89.63.119', // update me
      options: 
         {
-           database: 'eCloud-homologa' //update me
+           database: 'eCloud-foodtown' //update me
            , encrypt: true
         }
    }

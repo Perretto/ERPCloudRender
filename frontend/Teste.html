@@ -18,13 +18,27 @@
 	//systemName.push("LyConfiguracaoNCM")
 	//layouts.push("a087e9e6-ce68-46f1-9dcf-db8c35c36a7d")
 
+	
+	//systemName.push("ConfiguracoesNFservico")
+	//layouts.push("5adbad66-a4f7-4eaa-a6bb-0e776106e2c6")
+
 	// ---------------------------------
 
 	//systemName.push("cadastrodeempresas")
 	//layouts.push("e1f2e1b3-f482-4173-b2d2-c08d2368661c")
 
+	//systemName.push("ly_preferenciasEmpresa")
+	//layouts.push("87d0ced7-123b-4272-b561-f4ef60305665")
+
 	//systemName.push("cadastrodeusuarios")
 	//layouts.push("dea2281a-27a8-4970-ba45-8b3e23463767")
+
+	//systemName.push("lyPermissoesUsuarios")
+	//layouts.push("e6b80ac8-0967-4dc9-af2d-5520d7c1c150")
+
+	systemName.push("lyRelatorios")
+	layouts.push("512f9e8f-3ab7-40c9-86ca-17cf370b65cb")
+	
 
 	//Descrições Gerais ==================================
 	//systemName.push("TiposTitulo")
@@ -57,6 +71,11 @@
 	//systemName.push("cidade")
 	//layouts.push("9f88ab16-97b1-489d-a994-21768f1b74cd")
 	
+	//systemName.push("cnab")
+	//layouts.push("e81f051e-df1b-4ffe-9f5e-bf655e171ff6")
+
+	//systemName.push("ly_tipo_movimentacao_financeira")
+	//layouts.push("9ec72589-2ad8-461a-801a-79def2bb2e94")
 
 	//----------------------------------
 	
@@ -108,6 +127,10 @@
 	
 	//systemName.push("gerararquivocnab")
 	//layouts.push("308f15e9-8b2d-4b30-be3f-7deea93a1acf")
+
+	//systemName.push("lytPlanoContasFinanceiro")
+ 	//layouts.push("265e3d76-78a0-4dcf-96b8-515b0c29a492")
+
 	//===================================================
 
 	//Vendas =============================================	
@@ -119,6 +142,10 @@
 
 	//systemName.push("pedidodevendas")
 	//layouts.push("ee5b8618-b239-49ca-86a9-6975134c8713")
+
+	//systemName.push("lyMovimentacaoNFeS")
+	//layouts.push("fbd9ecec-7ea5-464e-a5f0-1ff21f8f1037")
+
 	//====================================================
 
 	//Compras ============================================
@@ -148,8 +175,8 @@
 
 
 	//Faturamento ========================================
-	systemName.push("notafiscal")
-	layouts.push("07ca6db2-a587-4a59-aa82-95f1795bdf68")
+	//systemName.push("notafiscal")
+	//layouts.push("07ca6db2-a587-4a59-aa82-95f1795bdf68")
 
 	//systemName.push("layNFe")
 	//layouts.push("7df84e2b-376c-4af9-8d16-42ad021b7542")
@@ -169,11 +196,26 @@
 	//systemName.push("lytMovimentacaoBancaria")
 	//layouts.push("37614839-de3a-4a2e-b158-046db06ffef2")
 
+	//systemName.push("lytFluxoCaixa")
+	//layouts.push("d24c2f7f-54f0-4bcd-9ae9-715ffd8aded4")
 	
+	//systemName.push("lytMovimentacaoCaixa")
+	//layouts.push("872b29c0-71f1-4f93-b223-a79cb13eadd7")
+
+	
+	//systemName.push("classificacaofiscal")
+	//layouts.push("3ed64560-0c79-482c-97a4-4e6694ab4951")
+
+	//systemName.push("setor")
+	//layouts.push("975a62fa-52fa-4de3-9c75-8a08106b66ee")
+
+	var enterpriseID = "561bf579-5655-42de-a290-038c6f76b974"; //Homologa
+	//var enterpriseID = "c828e170-53a4-4191-8f28-ad28cacf72f4"; //Intelecta
+
 
 	for(var i=0; i<layouts.length; i++){
-		console.log("ok");
-		window.open("file:///D:/ERPCloudRender/frontend/index.html?enterpriseID=561BF579-5655-42DE-A290-038C6F76B974&systemName=" + systemName[i] + "&layoutID=" + layouts[i] + "&publish=false", "_blank")
+		window.open("file:///D:/ERPCloudRender/frontend/index.html?enterpriseID=" + enterpriseID + "&systemName=" + systemName[i] + "&layoutID=" + layouts[i] + "&publish=false", "_blank")
+		//window.open("file:///D:/ERPCloudRender/frontend/index.html?enterpriseID=39B75B6A-655C-4463-985C-CDFEF415DDCF&systemName=" + systemName[i] + "&layoutID=" + layouts[i] + "&publish=false", "_blank")
 	}
 </script>
 </body>
