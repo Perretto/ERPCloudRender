@@ -24,8 +24,8 @@
 
 	// ---------------------------------
 
-	//systemName.push("cadastrodeempresas")
-	//layouts.push("e1f2e1b3-f482-4173-b2d2-c08d2368661c")
+	systemName.push("cadastrodeempresas")
+	layouts.push("e1f2e1b3-f482-4173-b2d2-c08d2368661c")
 
 	//systemName.push("ly_preferenciasEmpresa")
 	//layouts.push("87d0ced7-123b-4272-b561-f4ef60305665")
@@ -36,8 +36,8 @@
 	//systemName.push("lyPermissoesUsuarios")
 	//layouts.push("e6b80ac8-0967-4dc9-af2d-5520d7c1c150")
 
-	systemName.push("lyRelatorios")
-	layouts.push("512f9e8f-3ab7-40c9-86ca-17cf370b65cb")
+	//systemName.push("lyRelatorios")
+	//layouts.push("512f9e8f-3ab7-40c9-86ca-17cf370b65cb")
 	
 
 	//Descrições Gerais ==================================
@@ -212,9 +212,12 @@
 	var enterpriseID = "561bf579-5655-42de-a290-038c6f76b974"; //Homologa
 	//var enterpriseID = "c828e170-53a4-4191-8f28-ad28cacf72f4"; //Intelecta
 
+	//var urlTeste = "file:///D:/ERPCloudRender/frontend/index.html";
+	var urlTeste = "http://homologa.empresarioerpcloud.com.br/ERPCloudRender/frontend/index.html";
 
 	for(var i=0; i<layouts.length; i++){
-		window.open("file:///D:/ERPCloudRender/frontend/index.html?enterpriseID=" + enterpriseID + "&systemName=" + systemName[i] + "&layoutID=" + layouts[i] + "&publish=false", "_blank")
+		
+		window.open(urlTeste + "?enterpriseID=" + enterpriseID + "&systemName=" + systemName[i] + "&layoutID=" + layouts[i] + "&publish=false", "_blank")
 		//window.open("file:///D:/ERPCloudRender/frontend/index.html?enterpriseID=39B75B6A-655C-4463-985C-CDFEF415DDCF&systemName=" + systemName[i] + "&layoutID=" + layouts[i] + "&publish=false", "_blank")
 	}
 </script>
