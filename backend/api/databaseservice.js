@@ -9,8 +9,8 @@ const general = require('./general')
 const router = express.Router()
 server.use('/api', router)
 // config for your database
-var config = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'eCloud-homologa'};
-var configMetaObjecto = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'intelecta10_homologa'};
+var config = {user: 'sa', password: 'IntSql2015@', server: '172.31.8.216',  database: 'eCloud-homologa'};
+var configMetaObjecto = {user: 'sa', password: 'IntSql2015@', server: '172.31.8.216',  database: 'intelecta10_homologa'};
 
 //var config = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'eCloud-foodtown'};
 //var configMetaObjecto = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'intelecta10_foodtown_up'};
