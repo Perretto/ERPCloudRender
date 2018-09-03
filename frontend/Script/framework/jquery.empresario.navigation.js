@@ -835,7 +835,7 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
 
     //pega o select all
     var _listall = "";
-    var urllistall="http://localhost:3001/api/getSelectListAll/" + enterpriseID + "/" + layoutID;
+    var urllistall="http://" + window.location.host + ":3001/api/getSelectListAll/" + enterpriseID + "/" + layoutID;
     $.ajax({
         method: "GET",
         async: false,
@@ -848,7 +848,7 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
 
     //pega o select da tela
     var _finddata = "";
-    var urldata="http://localhost:3001/api/getSelecFinddata/" + enterpriseID + "/" + layoutID;
+    var urldata="http://" + window.location.host + ":3001/api/getSelecFinddata/" + enterpriseID + "/" + layoutID;
     $.ajax({
         method: "GET",
         async: false,
@@ -862,7 +862,7 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
     //salva
     $.ajax({
         method: "POST",
-        url: "http://localhost:3001/api/saveHtml",
+        url: "http://" + window.location.host + ":3001/api/saveHtml",
         data: { layoutID: layoutID, html: _html, tabgenid: tabGenScreen, listall: _listall, finddata: _finddata }
     })
     .done(function( msg ) {
@@ -876,7 +876,7 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
     
     //pega os containers da tela
     var _finddata = "";
-    var urldata="http://localhost:3001/api/getListContainersLayout/" + enterpriseID + "/" + layoutID;
+    var urldata="http://" + window.location.host + ":3001/api/getListContainersLayout/" + enterpriseID + "/" + layoutID;
     $.ajax({
         method: "GET",
         async: false,
@@ -887,7 +887,7 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
     });
 
     _finddata = JSON.stringify(_finddata)
-    var urldata="http://localhost:3001/api/getSelecFindFillGrid/";
+    var urldata="http://" + window.location.host + ":3001/api/getSelecFindFillGrid/";
     $.ajax({
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         method: "POST",
@@ -900,7 +900,7 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
     });
 
     _finddata = JSON.stringify(_finddata)
-    var urldata="http://localhost:3001/api/getSelecFindDataGrid/";
+    var urldata="http://" + window.location.host + ":3001/api/getSelecFindDataGrid/";
     $.ajax({
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         method: "POST",
@@ -913,7 +913,7 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
     });
 
    _finddata = JSON.stringify(_finddata)
-    var urldata="http://localhost:3001/api/getDeleteData/";
+    var urldata="http://" + window.location.host + ":3001/api/getDeleteData/";
     $.ajax({
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         method: "POST",
@@ -926,7 +926,7 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
     });
 
     _finddata = JSON.stringify(_finddata)
-    var urldata="http://localhost:3001/api/saveCollectionContainers/";
+    var urldata="http://" + window.location.host + ":3001/api/saveCollectionContainers/";
     $.ajax({
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         method: "POST",
@@ -942,7 +942,7 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
 
     //pega os controles da tela
     var _finddata = "";
-    var urldata="http://localhost:3001/api/getSelecControls/" + enterpriseID + "/" + layoutID;
+    var urldata="http://" + window.location.host + ":3001/api/getSelecControls/" + enterpriseID + "/" + layoutID;
     $.ajax({
         method: "GET",
         async: false,
@@ -953,7 +953,7 @@ function atualizaDadosHtmlMongoDB(tabGenID, layoutID) {
     });
 
     _finddata = JSON.stringify(_finddata)
-    var urldata="http://localhost:3001/api/saveCollectionControls/";
+    var urldata="http://" + window.location.host + ":3001/api/saveCollectionControls/";
     $.ajax({
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         method: "POST",
@@ -985,7 +985,7 @@ function atualizaDadosHtmlMongoDB2(tabGenID, layoutID) {
     //salva
     $.ajax({
         method: "POST",
-        url: "http://localhost:3001/api/saveLayout",
+        url: "http://" + window.location.host + ":3001/api/saveLayout",
         async: false,
         data: { layoutID: layoutID, html: _html, tabgenid: tabGenScreen, listall: _listall, finddata: _finddata, enterpriseID: enterpriseID }
     })
@@ -995,7 +995,7 @@ function atualizaDadosHtmlMongoDB2(tabGenID, layoutID) {
 
 
 
-    var urldata="http://localhost:3001/api/saveContainers/" + enterpriseID + "/" + layoutID;
+    var urldata="http://" + window.location.host + ":3001/api/saveContainers/" + enterpriseID + "/" + layoutID;
     $.ajax({
         method: "GET",
         async: false,
@@ -1008,7 +1008,7 @@ function atualizaDadosHtmlMongoDB2(tabGenID, layoutID) {
     
     //pega os controles da tela
     var _finddata = "";
-    var urldata="http://localhost:3001/api/getSelecControls/" + enterpriseID + "/" + layoutID;
+    var urldata="http://" + window.location.host + ":3001/api/getSelecControls/" + enterpriseID + "/" + layoutID;
     $.ajax({
         method: "GET",
         async: false,
@@ -1021,7 +1021,7 @@ function atualizaDadosHtmlMongoDB2(tabGenID, layoutID) {
     _finddata = JSON.stringify(_finddata)
 
     if (_finddata != "[]") {
-        var urldata="http://localhost:3001/api/saveCollectionControls/";
+        var urldata="http://" + window.location.host + ":3001/api/saveCollectionControls/";
         $.ajax({
             headers: { "Content-Type": "application/json", "Accept": "application/json" },
             method: "POST",
