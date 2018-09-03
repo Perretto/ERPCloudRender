@@ -1,4 +1,5 @@
 ﻿function CreateDropDownDSG(parameters) {
+    globalEnterpriseID = getUrlVar("enterpriseID")
     var retorno = "";
     var readonlybool = "";
 
