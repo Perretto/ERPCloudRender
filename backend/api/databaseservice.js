@@ -9,16 +9,16 @@ const general = require('./general')
 const router = express.Router()
 server.use('/api', router)
 // config for your database
-var config = {user: 'sa', password: 'IntSql2015@', server: '172.31.8.216',  database: 'eCloud-homologa'};
-var configMetaObjecto = {user: 'sa', password: 'IntSql2015@', server: '172.31.8.216',  database: 'intelecta10_homologa'};
+var config = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'eCloud-broker'};
+var configMetaObjecto = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'intelecta10_broker'};
 
 //var config = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'eCloud-foodtown'};
 //var configMetaObjecto = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'intelecta10_foodtown_up'};
 
 
 //var url = "mongodb://localhost:27017/foodtown";
-var base = "erpcloud"; // erpcloudfoodtown
-var url = "mongodb://localhost:27017/" + base;
+var base = "broker"; // erpcloudfoodtown
+var url = "mongodb://localhost:27017/broker";
 //var config = {user: 'sa', password: '1nt3l3ct@', server: '54.149.163.193',  database: 'eCloud-roadmap'};
 
 router.route('/listall/:id').get(function(req, res) {
@@ -826,19 +826,19 @@ function getSelectListAll(submit, callback){
     select += "(select nm_SystemName FROM BaseObject p WHERE p.ID=c.Fill2PropertyID) as ColFKFill2, ";
     select += "(bProp.nm_SystemName) as Coluna ";
     select += "FROM Control c ";
-    select += "INNER JOIN BaseObject b ON c.id=b.ID ";
-    select += "INNER JOIN Property prop ON prop.id=c.PropertyID ";
-    select += "INNER JOIN BaseObject bProp ON bProp.id=prop.id ";
-    select += "INNER JOIN BaseObject bTab ON bTab.id=bProp.OwnerObjectID ";
+    select += "LEFT JOIN BaseObject b ON c.id=b.ID ";
+    select += "LEFT JOIN Property prop ON prop.id=c.PropertyID ";
+    select += "LEFT JOIN BaseObject bProp ON bProp.id=prop.id ";
+    select += "LEFT JOIN BaseObject bTab ON bTab.id=bProp.OwnerObjectID ";
     select += "WHERE (c.sn_visiblegrid = 1 OR prop.sn_PrimaryKey=1) AND ";
     select += "b.OwnerObjectID = ( SELECT TOP 1 Co.ID AS IDContainerPrincipal FROM Layout L  ";
-    select += "                    INNER JOIN Form f ON L.ID=f.LayoutID ";
+    select += "                    LEFT JOIN Form f ON L.ID=f.LayoutID ";
     select += "                    LEFT JOIN FormXContainer fxc ON fxc.BaseObjectID=f.ID ";
     select += "                    LEFT JOIN Container Co ON Co.ID=fxc.ContainerID ";
     select += "                    WHERE L.ID='" + layoutID + "'  and bTab.ID=L.PrincipalDataTypeID ";
     select += "                    ORDER BY fxc.nr_DisplaySequence ) ";
     select += "ORDER BY c.nr_ScreenSequence ";
-
+console.log(select)
     sql.close()
     // connect to your database
     sql.connect(configMetaObjecto, function (err) {    

@@ -41,7 +41,7 @@ function checkEnvironment(sn_loadEnterprises) {
     */
 
     //Desenvolvimento
-    dados = "homologa";
+    dados = "broker";
 
     if (!sn_loadEnterprises)
         getAjaxParameter(url, dados, function (result) { welcome(result) });

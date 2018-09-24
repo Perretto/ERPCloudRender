@@ -391,9 +391,14 @@ function getGlobalParameters(parametro) {
 
     //global.urlInterface = "http://" + window.location.host
     //global.urlPlataforma = "http://" + window.location.host
-
-    global.urlInterface = "http://homologa.empresariocloud.com.br";
-    global.urlPlataforma = "http://homologa.empresariocloud.com.br";
+    if(window.location.host == ""){
+        global.urlPlataform = "localhost"
+    }else{
+        global.urlPlataform = window.location.host;
+    }
+    
+    global.urlInterface = "http://broker.empresariocloud.com.br";
+    global.urlPlataforma = "http://broker.empresariocloud.com.br";
 
     global.urlDesenvolvimento = "http://localhost:13886/";
 
