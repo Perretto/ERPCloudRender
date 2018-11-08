@@ -9,16 +9,16 @@ const general = require('./general')
 const router = express.Router()
 server.use('/api', router)
 // config for your database
-var config = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'eCloud-broker'};
-var configMetaObjecto = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'intelecta10_broker'};
+var config = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'eCloud-homologa'};
+var configMetaObjecto = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'intelecta10_homologa'};
 
 //var config = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'eCloud-foodtown'};
 //var configMetaObjecto = {user: 'sa', password: 'IntSql2015@', server: '52.89.63.119',  database: 'intelecta10_foodtown_up'};
 
 
 //var url = "mongodb://localhost:27017/foodtown";
-var base = "broker"; // erpcloudfoodtown
-var url = "mongodb://localhost:27017/broker";
+var base = "erpcloud"; // erpcloudfoodtown
+var url = "mongodb://localhost:27017/erpcloud";
 //var config = {user: 'sa', password: '1nt3l3ct@', server: '54.149.163.193',  database: 'eCloud-roadmap'};
 
 router.route('/listall/:id').get(function(req, res) {
@@ -1491,7 +1491,7 @@ router.route('/getSelecControls/:enterpriseID/:layoutID').get(function(req, res)
     var enterpriseID = req.param('enterpriseID');
     var layoutID = req.param('layoutID');
 
-    var select = "SELECT c.ID, bTab.nm_SystemName AS Tabela, bPropF1.nm_SystemName As CampoFill1, bPropF2.nm_SystemName As CampoFill2, bPropF3.nm_SystemName As CampoFill3, c.nm_ControlType AS nm_ControlType ";
+    var select = "SELECT c.ID, bTab.nm_SystemName AS Tabela, bPropF1.nm_SystemName As CampoFill1, bPropF2.nm_SystemName As CampoFill2, bPropF3.nm_SystemName As CampoFill3, c.nm_ControlType AS nm_ControlType, c.nm_Filter AS nm_Filter ";
     select += "FROM Control c ";
     select += "    INNER JOIN BaseObject b ON c.id=b.ID  ";
     select += "     LEFT JOIN Property propF1 ON propF1.id=c.Fill1PropertyID  ";
@@ -1569,6 +1569,10 @@ router.route('/getSelecControls/:enterpriseID/:layoutID').get(function(req, res)
                     sqlfinal += " FROM " + element.Tabela;
                     
                     var where = "";
+                    if(element.nm_Filter){
+                        where += " WHERE " + element.nm_Filter;
+                    }
+                    /*
                     if(element.Tabela.toLowerCase() == "entidade"){
                         switch (layoutID) {
                             case "d82d11c8-ea16-47c7-be04-10423467f04e":
@@ -1587,6 +1591,7 @@ router.route('/getSelecControls/:enterpriseID/:layoutID').get(function(req, res)
                                 break;
                         }
                     }
+                    */
                     
                     if(where){
                         where += " AND " + element.Tabela + "." + element.CampoFill2 + " LIKE '{{id}}%' ";
