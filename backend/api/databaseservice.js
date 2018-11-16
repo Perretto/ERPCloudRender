@@ -588,7 +588,8 @@ function getSelecFinddata(submit, callback) {
     select += "    inner join Container ON Container.ID=FormXContainer.ContainerID  ";
     select += "    inner join BaseObject ON BaseObject.ID=Container.PrincipalDataTypeID "; 
     select += "    inner join Control CTR ON CTR.PropertyID=bCol.ID  ";
-    select += "    inner join BaseObject bCTR ON bCTR.ID=CTR.Fill1PropertyID "; 
+    //select += "    inner join BaseObject bCTR ON bCTR.ID=CTR.Fill1PropertyID "; 
+    select += "    inner join BaseObject bCTR ON bCTR.ID=CTR.Fill2PropertyID "; 
     select += "    inner join baseobject bb ON bb.id=bCTR.Ownerobjectid ";
     select += "    where form.LayoutID='" + layoutID + "' and Container.PrincipalDataTypeID=bTab.ID and bCol.ID=CTR.PropertyID) AS TabFK,  ";
       
